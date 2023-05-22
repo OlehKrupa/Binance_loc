@@ -9,7 +9,7 @@ class TestController extends Controller
 {
     public function index()
     {
-        dd(Currency::all());
+        phpinfo();
     }
    
 }
