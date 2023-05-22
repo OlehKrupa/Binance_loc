@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -49,7 +50,7 @@ class User extends Authenticatable
         'deleted_at'=> 'datetime',
     ];
 
-    public function currencies()
+    public function currencies(): BelongsToMany
     {
         return $this->belongsToMany(Currency::class, 'user_currency', 'users_id', 'currency_id')
             ->withTimestamps();
