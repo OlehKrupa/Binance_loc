@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
+use App\Models\Currency;
 
 class CurrencySeeder extends Seeder
 {
@@ -12,24 +14,6 @@ class CurrencySeeder extends Seeder
      */
     public function run(): void
     {
-        Currency::create([
-            'name' => 'BTC',
-        ]);
-
-        Currency::create([
-            'name' => 'ETH',
-        ]);
-
-        Currency::create([
-            'name' => 'XRM',
-        ]);
-
-        Currency::create([
-            'name' => 'USDT',
-        ]);
-
-        Currency::create([
-            'name' => 'LTC',
-        ]);
+        Currency::factory()->count(5)->create();
     }
 }
