@@ -3,10 +3,11 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\User;
+use App\Models\Currency;
+use App\Models\TableName;
+use Faker\Generator as Faker;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\user_currency>
- */
 class UserCurrencyFactory extends Factory
 {
     /**
@@ -17,7 +18,10 @@ class UserCurrencyFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'user_id' => User::all()->random()->id,
+            'currency_id'=>Currency::all()->random()->id,
+            'created_at'=>now(),
+            'updated_at'=>now(),
         ];
     }
 }
