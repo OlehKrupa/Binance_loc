@@ -52,6 +52,7 @@ class User extends Authenticatable
 
     public function currencies(): BelongsToMany
     {
+        //Оце з ключами шось вообще не поняв
         return $this->belongsToMany(Currency::class, 'user_currency', 'users_id', 'currency_id')
             ->withTimestamps();
     }
