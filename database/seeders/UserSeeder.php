@@ -14,8 +14,6 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $currency = Currency::inRandomOrder()->limit(4)->get();
-
         User::factory(5)->create();
     }
 }
