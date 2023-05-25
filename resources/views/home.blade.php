@@ -17,7 +17,9 @@
                     {{ __('You are logged in!') }}
 
                     <!-- Add Chart.js graph -->
-                    <canvas id="myChart"></canvas>
+                    <div>
+                        <canvas id="myChart"></canvas> 
+                    </div>
 
                     <!-- Add DataTable -->
                     <table id="myTable" class="table">
@@ -50,10 +52,11 @@
 
 @section('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <script>
     // Chart.js
+
     var ctx = document.getElementById('myChart').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'line', // Line chart to display Bitcoin price
@@ -82,9 +85,12 @@
         }
     });
 
+    console.log('Chart.js script executed.');
+
     // DataTable
     $(document).ready(function() {
         $('#myTable').DataTable();
+        console.log('DataTable script executed.');
     });
 </script>
 @endsection
