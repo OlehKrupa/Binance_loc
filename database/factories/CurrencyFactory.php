@@ -19,8 +19,18 @@ class CurrencyFactory extends Factory
      */
     public function definition(): array
     {
+        $cryptocurrencies = [
+            'BTC', 'ETH', 'BNB', 'XRP', 'DOGE', 'ADA', 'LTC', 'DOT', 'BCH', 'LINK',
+            'XLM', 'USDT', 'VET', 'ETC', 'XMR', 'EOS', 'TRX', 'THETA', 'FIL', 'AAVE',
+            'XTZ', 'MIOTA', 'ATOM', 'CRO', 'MKR', 'ALGO', 'SOL', 'NEO', 'SNX', 'AVAX',
+            'UNI', 'COMP', 'SUSHI', 'YFI', 'CRV', 'REN', 'UMA', 'BAL', 'KSM', 'ICX',
+            'ZEC', 'DASH', 'OMG', 'GRT', 'SC', 'SRM', 'ENJ', 'QTUM', 'MANA', 'HOT',
+        ];
+
+        $randomCurrency = $this->faker->unique()->randomElement($cryptocurrencies);
+
         return [
-            'name' => $this->faker->currencyCode,
+            'name' => $randomCurrency,
         ];
     }
 }
