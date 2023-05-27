@@ -9,12 +9,12 @@
 
                 <div class="card-body">
                     @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
+                    <div class="alert alert-success" role="alert">
+                        {{ session('status') }}
+                    </div>
                     @endif
 
-                    {{ __('You are logged in!') }}
+                    <!--{{ __('You are logged in!') }}-->
 
                     <!-- Add Chart.js graph -->
                     <div>
@@ -22,7 +22,7 @@
                     </div>
 
                     <!-- Add DataTable -->
-                    <table id="myTable" class="table">
+                    <table id="currencyTable" class="table">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -31,16 +31,13 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach ($currenciesHistory as $currency)
                             <tr>
-                                <td>Bitcoin</td>
-                                <td>$45,000</td>
-                                <td>$46,000</td>
+                                <td>{{ $currency->name }}</td>
+                                <td>${{ number_format($currency->buy, 2) }}</td>
+                                <td>${{ number_format($currency->sell, 2) }}</td>
                             </tr>
-                            <tr>
-                                <td>Ethereum</td>
-                                <td>$3,000</td>
-                                <td>$3,100</td>
-                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -89,8 +86,9 @@
 
     // DataTable
     $(document).ready(function() {
-        $('#myTable').DataTable();
-        console.log('DataTable script executed.');
+        $('#currencyTable').DataTable({
+            
+        });
     });
 </script>
 @endsection
