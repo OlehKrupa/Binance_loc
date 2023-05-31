@@ -31,4 +31,22 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Cryptocurrencies
+    |--------------------------------------------------------------------------
+    |
+    | List of available cryptocurrencies
+    |
+    */
+
+    'cryptocurrencies' => [
+        'AAVE', 'ADA', 'ALGO', 'ATOM', 'AVAX',
+        'BCH', 'BSV', 'BTC', 'COMP', 'CRO',
+        'DAI', 'DOGE', 'DOT', 'EGLD', 'EOS',
+        'ETC', 'ETH', 'FIL', 'LINK', 'LTC',
+        'MATIC', 'MKR', 'SUSHI', 'UMA', 'WBTC',
+        'XLM', 'XTZ', 'YFI', 'ZEC',
+    ],
+
 ];

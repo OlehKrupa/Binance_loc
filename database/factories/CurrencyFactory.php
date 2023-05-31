@@ -19,17 +19,7 @@ class CurrencyFactory extends Factory
      */
     public function definition(): array
     {
-        $cryptocurrencies = array(
-            "BTC", "ETH", "BNB", "ADA", "XRP",
-            "DOGE", "DOT", "BCH", "LTC", "LINK",
-            "XLM", "MATIC", "ETC", "THETA", "VET",
-            "FIL", "TRX", "XMR", "EOS", "NEO",
-            "KLAY", "ATOM", "IOTA", "WBTC", "LUNA",
-            "BSV", "AAVE", "XTZ", "FTT", "CRO",
-            "ALGO", "MKR", "COMP", "AVAX", "TFUEL",
-            "CAKE", "HT", "DAI", "BTT", "SUSHI",
-            "ZEC", "EGLD", "YFI", "UMA"
-        );
+        $cryptocurrencies = config('services.cryptocurrencies');
 
         $randomCurrency = $this->faker->unique()->randomElement($cryptocurrencies);
 
