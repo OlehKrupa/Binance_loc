@@ -23,23 +23,32 @@ class PreferencesController extends Controller
 
     public function update(Request $request)
     {
-        // Получаем выбранные пользователем криптовалюты из запроса
-        $selectedCurrencies = $request->input('currencies');
+        // Get the selected cryptocurrencies chosen by the user from the request
+        $selectedCurrencies = $request->input('selectedCurrencies');
 
-        // Валидация выбранных криптовалют
+        // Validate the selected cryptocurrencies
         $validatedData = $request->validate([
-            'currencies' => 'required|array|max:5'
+            'selectedCurrencies' => 'required|array|min:1|max:5'
         ]);
 
-        // Очищаем предыдущие выбранные криптовалюты пользователя
+        // Check if the number of selected cryptocurrencies is within the allowed range
+    if (count($selectedCurrencies) > 5) {
+        return redirect()->back()->withErrors('You can select a maximum of 5 cryptocurrencies.');
+    } elseif (count($selectedCurrencies) === 0) {
+        return redirect()->back()->withErrors('Please select at least one cryptocurrency.');
+    }
+
+        // Clear the user's previously selected cryptocurrencies
         $user = auth()->user();
         $user->currencies()->detach();
 
-        // Добавляем новые выбранные криптовалюты
+        // Add the newly selected cryptocurrencies
         foreach ($selectedCurrencies as $currencyId) {
             $user->currencies()->attach($currencyId);
         }
 
+        // Redirect back with a success message
         return redirect()->back()->with('status', 'Preferences updated successfully.');
     }
+
 }
