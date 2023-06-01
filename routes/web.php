@@ -17,8 +17,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test', 'App\Http\Controllers\TestController@index');
+Route::get('/preferences',[App\Http\Controllers\PreferencesController::class,'index'])->name('preferences');
 
-Auth::routes();
+Route::post('/preferences/update', [PreferencesController::class, 'update'])->name('preferences.update');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Auth::routes();
