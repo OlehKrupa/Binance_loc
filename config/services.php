@@ -49,4 +49,15 @@ return [
         'XLM', 'XTZ', 'YFI', 'ZEC',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Maximum Cryptocurrencies
+    |--------------------------------------------------------------------------
+    |
+    | Maximum number of cryptocurrencies that a user can select
+    |
+    */
+   
+    'max_cryptocurrencies' => 5,
+
 ];
