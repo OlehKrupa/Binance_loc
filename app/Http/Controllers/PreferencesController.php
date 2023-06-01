@@ -23,20 +23,23 @@ class PreferencesController extends Controller
 
     public function update(Request $request)
     {
+        //max currencies for current user
+        $maxCryptocurrencies = config('services.max_cryptocurrencies');
+
         // Get the selected cryptocurrencies chosen by the user from the request
         $selectedCurrencies = $request->input('selectedCurrencies');
 
         // Validate the selected cryptocurrencies
         $validatedData = $request->validate([
-            'selectedCurrencies' => 'required|array|min:1|max:5'
+            'selectedCurrencies' => 'required|array|min:1|max:' . $maxCryptocurrencies,
         ]);
 
         // Check if the number of selected cryptocurrencies is within the allowed range
-    if (count($selectedCurrencies) > 5) {
-        return redirect()->back()->withErrors('You can select a maximum of 5 cryptocurrencies.');
-    } elseif (count($selectedCurrencies) === 0) {
-        return redirect()->back()->withErrors('Please select at least one cryptocurrency.');
-    }
+        if (count($selectedCurrencies) > $maxCryptocurrencies) {
+            return redirect()->back()->withErrors('You can select a maximum of ' . $maxCryptocurrencies . ' cryptocurrencies.');
+        } elseif (count($selectedCurrencies) === 0) {
+            return redirect()->back()->withErrors('Please select at least one cryptocurrency.');
+        }
 
         // Clear the user's previously selected cryptocurrencies
         $user = auth()->user();
