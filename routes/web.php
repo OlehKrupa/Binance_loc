@@ -19,7 +19,7 @@ Route::get('/', function () {
 
 Route::get('/preferences',[App\Http\Controllers\PreferencesController::class,'index'])->name('preferences');
 
-Route::post('/preferences/update', [PreferencesController::class, 'update'])->name('preferences.update');
+Route::post('/preferences/update', [App\Http\Controllers\PreferencesController::class, 'update'])->name('preferences.update');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
