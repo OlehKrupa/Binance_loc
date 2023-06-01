@@ -15,6 +15,14 @@
                         </div>
                         @endif
 
+                        @if ($errors->any())
+                            <div class="alert alert-danger" role="alert">
+                                    @foreach ($errors->all() as $error)
+                                        {{ $error }}
+                                    @endforeach
+                            </div>
+                        @endif
+
                         <!-- Add DataTable -->
                         <table id="currencyTable" class="table">
                             <thead>
@@ -29,7 +37,7 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $currency->name }}</td>
-                                    <td><input type="checkbox" {{ in_array($currency->id, $selectedCurrencies->toArray()) ? 'checked' : '' }}></td>
+                                    <td><input type="checkbox" name="selectedCurrencies[]" value="{{ $currency->id }}" {{ in_array($currency->id, $selectedCurrencies->toArray()) ? 'checked' : '' }}></td>
                                 </tr>
                                 @endforeach
                             </tbody>
