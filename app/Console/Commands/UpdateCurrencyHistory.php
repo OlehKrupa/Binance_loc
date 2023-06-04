@@ -31,8 +31,8 @@ class UpdateCurrencyHistory extends Command
 
         foreach ($currencies as $currency) {
             $currencyCode = $currency->name;
-            $buyUrl = "https://api.coinbase.com/v2/prices/{$currencyCode}-USD/buy";
-            $sellUrl = "https://api.coinbase.com/v2/prices/{$currencyCode}-USD/sell";
+            $buyUrl = env('COINBASE_API_URL') . "{$currencyCode}-USD/buy";
+            $sellUrl = env('COINBASE_API_URL') . "{$currencyCode}-USD/sell";
 
             $buyPrice = $this->fetchPrice($buyUrl);
             $sellPrice = $this->fetchPrice($sellUrl);
@@ -48,20 +48,19 @@ class UpdateCurrencyHistory extends Command
     }
 
     private function fetchPrice($url)
-{
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-    $response = curl_exec($ch);
-    $data = json_decode($response, true);
+        $response = curl_exec($ch);
+        $data = json_decode($response, true);
 
-    curl_close($ch);
+        curl_close($ch);
 
-    if (isset($data['data']['amount'])) {
-        return $data['data']['amount'];
+        if (isset($data['data']['amount'])) {
+            return $data['data']['amount'];
+        }
+
+        return 0; 
     }
-
-    return 0; 
-}
-
 }
