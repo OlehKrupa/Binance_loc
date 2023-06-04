@@ -45,6 +45,11 @@ class Kernel extends HttpKernel
         ],
     ];
 
+protected $routeMiddleware = [
+    // ...
+    'checkCryptocurrencyCount' => \App\Http\Middleware\CheckCryptocurrencyCount::class,
+];
+
     /**
      * The application's middleware aliases.
      *
