@@ -24,3 +24,10 @@ Route::post('/preferences/update', [App\Http\Controllers\PreferencesController::
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware('checkCryptocurrencyCount')->name('home');
 
 Auth::routes();
+
+Route::get('/clear', function() {    
+Artisan::call('cache:clear');    
+Artisan::call('config:cache');    
+Artisan::call('view:clear');  
+Artisan::call('route:clear');     
+return "Кэш очищен.";});
