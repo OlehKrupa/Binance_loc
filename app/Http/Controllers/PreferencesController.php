@@ -50,8 +50,9 @@ class PreferencesController extends Controller
             $user->currencies()->attach($currencyId);
         }
 
-        // Redirect back with a success message
-        return redirect()->back()->with('status', 'Preferences updated successfully.');
+        // Redirect to the "/home" page with a success message
+        return redirect('/home');
+
     }
 
 }
