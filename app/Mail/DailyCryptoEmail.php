@@ -15,14 +15,14 @@ class DailyCryptoEmail extends Mailable
     use Queueable, SerializesModels;
 
     public $user;
-    public $currencies;
     public $currenciesData;
+    public $selectedCurrencies;
 
-    public function __construct(User $user, $currencies, $currenciesData)
+    public function __construct(User $user, $currenciesData, $selectedCurrencies)
     {
         $this->user = $user;
-        $this->currencies = $currencies;
         $this->currenciesData = $currenciesData;
+        $this->selectedCurrencies = $selectedCurrencies;
     }
 
     public function build()

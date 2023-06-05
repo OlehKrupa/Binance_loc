@@ -5,30 +5,37 @@
 </head>
 <body>
     <h1>Daily Crypto Report</h1>
-    <p>Dear {{ $user->name }},</p>
+    <p>Dear {{ $user->first_name }} {{$user->last_name}},</p>
     
-    <h2>Currencies:</h2>
-    <ul>
-        @foreach ($currencies as $currency)
-            <li>{{ $currency->name }}</li>
-        @endforeach
-    </ul>
-    
-    <h2>Currencies Data:</h2>
+    <h2>Currencies daily trend:</h2>
     <table>
         <thead>
             <tr>
                 <th>Currency</th>
-                <th>Sell</th>
-                <th>Buy</th>
+                <th>Trend</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($currenciesData as $data)
+            @foreach ($selectedCurrencies as $currencyId)
                 <tr>
-                    <td>{{ $data->name }}</td>
-                    <td>{{ $data->sell }}</td>
-                    <td>{{ $data->buy }}</td>
+                    <td>
+                        @if (is_array($currenciesData[$currencyId]))
+                            {{ $currenciesData[$currencyId]['name'] }}
+                        @else
+                            N/A
+                        @endif
+                    </td>
+                    <td>
+                        @if (is_array($currenciesData[$currencyId]))
+                            @php
+                                $trend = $currenciesData[$currencyId]['trend'];
+                                $arrow = $trend > 0 ? '↑' : ($trend < 0 ? '↓' : '');
+                            @endphp
+                            {{ number_format($trend, 2) }}% {{ $arrow }}
+                        @else
+                            N/A
+                        @endif
+                    </td>
                 </tr>
             @endforeach
         </tbody>

@@ -34,10 +34,10 @@ class SendDailyCurrencyEmail extends Command
 
         foreach ($users as $user) {
             $selectedCurrencies = $user->currencies()->pluck('currency_id')->toArray();
-            $currencies = Currency::whereIn('id', $selectedCurrencies)->get();
-            $currenciesData = CurrencyHistory::getDayCurrencies($selectedCurrencies);
+            $currenciesData = CurrencyHistory::analyzeCurrencyTrend($selectedCurrencies);
 
-            Mail::to($user->email)->send(new DailyCryptoEmail($user, $currencies, $currenciesData));
+            Mail::to($user->email)->send(new DailyCryptoEmail($user, $currenciesData, $selectedCurrencies));
+            sleep(1);
         }
 
         $this->info('Daily crypto emails sent successfully.');
