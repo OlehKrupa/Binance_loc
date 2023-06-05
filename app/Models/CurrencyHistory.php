@@ -54,35 +54,34 @@ class CurrencyHistory extends Model
     }
 
     public static function analyzeCurrencyTrend($selectedCurrencies)
-{
-    $startDate = Carbon::now()->startOfDay();
-    $endDate = Carbon::now()->endOfDay();
+    {
+        $startDate = Carbon::now()->startOfDay();
+        $endDate = Carbon::now()->endOfDay();
 
-    $trend = [];
+        $trend = [];
 
-    foreach ($selectedCurrencies as $currencyId) {
-        $firstSell = self::select('currency_history.sell')
+        foreach ($selectedCurrencies as $currencyId) {
+            $firstSell = self::select('currency_history.sell')
             ->where('currency_id', $currencyId)
             ->whereBetween('created_at', [$startDate, $endDate])
             ->orderBy('created_at')
             ->value('sell');
 
-        $lastSell = self::select('currency_history.sell')
+            $lastSell = self::select('currency_history.sell')
             ->where('currency_id', $currencyId)
             ->whereBetween('created_at', [$startDate, $endDate])
             ->orderByDesc('created_at')
             ->value('sell');
 
-        if ($firstSell !== null && $lastSell !== null) {
-            $change = ($lastSell - $firstSell) / $firstSell * 100;
+            if ($firstSell !== null && $lastSell !== null) {
+                $change = ($lastSell - $firstSell) / $firstSell * 100;
 
-            $trend[$currencyId] = $change;
+                $trend[$currencyId] = [
+                    'name' => Currency::find($currencyId)->name,
+                    'trend' => $change,
+                ];
+            }
         }
+        return $trend;
     }
-
-    return $trend;
-}
-
-
-
 }
