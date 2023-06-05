@@ -17,7 +17,7 @@
 
                     <!-- Add Chart.js graph -->
                     <div>
-                        <canvas id="myChart"></canvas> 
+                        <canvas id="myChart"></canvas>
                     </div>
 
                     <!-- Add DataTable -->
@@ -46,48 +46,45 @@
 </div>
 @endsection
 
-@section('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <script>
     // Chart.js
-
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'line', // Line chart to display Bitcoin price
-        data: {
-            labels: ['12:00 AM', '3:00 AM', '6:00 AM', '9:00 AM', '12:00 PM', '3:00 PM', '6:00 PM', '9:00 PM'], // Time intervals
-            datasets: [{
-                label: 'Bitcoin Price',
-                data: [45000, 45200, 45500, 45300, 45800, 46000, 45800, 45500], // Bitcoin price data for the day
-                backgroundColor: 'rgba(0, 123, 255, 0.5)',
-                borderColor: 'rgba(0, 123, 255, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(value, index, values) {
-                            return '$' + value; // Display dollar sign with y-axis values
+    $(document).ready(function() {
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line', // Line chart to display Bitcoin price
+            data: {
+                labels: ['12:00 AM', '3:00 AM', '6:00 AM', '9:00 AM', '12:00 PM', '3:00 PM', '6:00 PM', '9:00 PM'], // Time intervals
+                datasets: [{
+                    label: 'Bitcoin Price',
+                    data: [45000, 45200, 45500, 45300, 45800, 46000, 45800, 45500], // Bitcoin price data for the day
+                    backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                    borderColor: 'rgba(0, 123, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value, index, values) {
+                                return '$' + value; // Display dollar sign with y-axis values
+                            }
                         }
                     }
                 }
             }
-        }
-    });
+        });
 
-    console.log('Chart.js script executed.');
+        console.log('Chart.js script executed.');
 
     // DataTable
-    $(document).ready(function() {
         $('#currencyTable').DataTable({
-            
+
         });
     });
 </script>
-@endsection
