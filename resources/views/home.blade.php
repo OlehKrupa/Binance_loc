@@ -13,8 +13,6 @@
                     </div>
                     @endif
 
-                    <!--{{ __('You are logged in!') }}-->
-
                     <!-- Add Chart.js graph -->
                     <div>
                         <canvas id="myChart"></canvas>
@@ -79,8 +77,6 @@
                 }
             }
         });
-
-        console.log('Chart.js script executed.');
 
     // DataTable
         $('#currencyTable').DataTable({
