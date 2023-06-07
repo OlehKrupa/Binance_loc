@@ -1,10 +1,10 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Currency;
+use App\Http\Requests\PreferencesUpdateRequest;
 
 class PreferencesController extends Controller
 {
@@ -12,36 +12,21 @@ class PreferencesController extends Controller
     {
         $currencies = Currency::all();
 
-        //get current user
+        // Get the current user
         $user = auth()->user();
 
-        //get selected user currencies 
+        // Get the currencies selected by the user
         $selectedCurrencies = $user->currencies()->pluck('currency_id');
 
         return view('preferences', compact('currencies', 'selectedCurrencies'));
     }
 
-    public function update(Request $request)
+    public function update(PreferencesUpdateRequest $request)
     {
-        //max currencies for current user
-        $maxCryptocurrencies = config('services.max_cryptocurrencies');
-
-        // Get the selected cryptocurrencies chosen by the user from the request
+        // Get the selected cryptocurrencies from the request
         $selectedCurrencies = $request->input('selectedCurrencies');
 
-        // Validate the selected cryptocurrencies
-        $validatedData = $request->validate([
-            'selectedCurrencies' => 'required|array|min:1|max:' . $maxCryptocurrencies,
-        ]);
-
-        // Check if the number of selected cryptocurrencies is within the allowed range
-        if (count($selectedCurrencies) > $maxCryptocurrencies) {
-            return redirect()->back()->withErrors('You can select a maximum of ' . $maxCryptocurrencies . ' cryptocurrencies.');
-        } elseif (count($selectedCurrencies) === 0) {
-            return redirect()->back()->withErrors('Please select at least one cryptocurrency.');
-        }
-
-        // Clear the user's previously selected cryptocurrencies
+        // Clear previously selected cryptocurrencies for the user
         $user = auth()->user();
         $user->currencies()->detach();
 
@@ -51,8 +36,6 @@ class PreferencesController extends Controller
         }
 
         // Redirect to the "/home" page with a success message
-        return redirect('/home');
-
+        return redirect('/home')->with('success', 'Preferences updated successfully.');
     }
-
 }
