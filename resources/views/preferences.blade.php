@@ -16,11 +16,11 @@
                         @endif
 
                         @if ($errors->any())
-                            <div class="alert alert-danger" role="alert">
-                                    @foreach ($errors->all() as $error)
-                                        {{ $error }}
-                                    @endforeach
-                            </div>
+                        <div class="alert alert-danger" role="alert">
+                            @foreach ($errors->all() as $error)
+                            {{ $error }}
+                            @endforeach
+                        </div>
                         @endif
 
                         <!-- Add DataTable -->
@@ -54,13 +54,21 @@
 @endsection
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 
 <script>
     // DataTable
     $(document).ready(function() {
         $('#currencyTable').DataTable({
+         language: {
+          paginate: {
+           previous: "Previous ",
+           next: " Next"
+       }
+   },
+   dom: 'f t l i p'
+});
 
-        });
     });
 </script>
