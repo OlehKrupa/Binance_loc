@@ -38,6 +38,9 @@ class HomeController extends Controller
         // Get last currencies
         $currenciesHistory = CurrencyHistory::getLastCurrencies($selectedCurrencies);
         
-        return view('home')->with('currenciesHistory', $currenciesHistory);
+        // Get day currencies
+        $dayCurrencies = CurrencyHistory::getDayCurrencies($selectedCurrencies);
+
+        return view('home')->with('currenciesHistory', $currenciesHistory)->with('dayCurrencies', $dayCurrencies);
     }
 }
