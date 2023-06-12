@@ -30,7 +30,7 @@ class SendDailyCurrencyEmail extends Command
      */
     public function handle()
     {
-        $users = User::all();
+        $users = User::whereNotNull('subscribed_at')->get();
 
         foreach ($users as $user) {
             $selectedCurrencies = $user->currencies()->pluck('currency_id')->toArray();
@@ -42,4 +42,5 @@ class SendDailyCurrencyEmail extends Command
 
         $this->info('Daily crypto emails sent successfully.');
     }
+
 }
