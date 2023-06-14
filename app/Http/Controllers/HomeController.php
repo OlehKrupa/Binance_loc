@@ -24,23 +24,27 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        //get current user
+        // Get current user
         $user = auth()->user();
 
-        //get current day
-        $startDate = Carbon::now(); 
+        // Get start day
+        $startDate = $request->input('dateRange', 1);
 
-        //get selected user currencies 
+        // Get selected user currencies 
         $selectedCurrencies = $user->currencies()->pluck('currency_id');
 
         // Get last currencies
         $currenciesHistory = CurrencyHistory::getLastCurrencies($selectedCurrencies);
-        
-        // Get day currencies
-        $dayCurrencies = CurrencyHistory::getDayCurrencies($selectedCurrencies);
 
-        return view('home')->with('currenciesHistory', $currenciesHistory)->with('dayCurrencies', $dayCurrencies);
+        // Get day currencies
+        $dayCurrencies = CurrencyHistory::getDayCurrencies($selectedCurrencies, $startDate);
+
+        return view('home')
+        ->with('currenciesHistory', $currenciesHistory)
+        ->with('dayCurrencies', $dayCurrencies) 
+        ->with('startDate',$startDate);
     }
+
 }
