@@ -37,9 +37,9 @@ class CurrencyHistory extends Model
         
     }
 
-    public static function getDayCurrencies($selectedCurrencies)
+    public static function getDayCurrencies($selectedCurrencies, $days)
     {
-        $startDate = Carbon::now()->startOfDay();
+        $startDate = Carbon::now()->subDays($days)->startOfDay();
         $endDate = Carbon::now()->endOfDay();
 
         return self::select('currency.id', 'currency.name', 'currency_history.sell', 'currency_history.buy', 'currency_history.updated_at')
