@@ -16,6 +16,24 @@
                     <div>
                         <canvas id="myChart"></canvas>
                     </div>
+
+                    <!-- Add choose days -->
+                    <form id="updateChartForm" method="POST" action="">
+                        @csrf
+                        <label for="dateRangeSelect">Select Date Range:</label>
+                        <select id="dateRangeSelect" name="dateRange">
+                            <option value="0">1 day</option>
+                            <option value="1">2 days</option>
+                            <option value="2">3 days</option>
+                            <option value="6">7 days</option>
+                            <option value="13">14 days</option>
+                            <option value="20">21 days</option>
+                            <option value="29">30 days</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Apply</button>
+                    </form>
+
+
                     <!-- Add DataTable -->
                     <table id="currencyTable" class="table">
                         <thead>
@@ -99,7 +117,6 @@
               info: "Select a cryptocurrency to display the chart"
           }
       });
-
 
     // Initial chart update
         updateChart(selectedCurrencyId);
