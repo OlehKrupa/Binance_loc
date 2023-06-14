@@ -76,10 +76,8 @@
         }
 
         function updateChart(selectedCurrencyId) {
-            //ЗАМЕИНТЬ 171 НА selectedCurrencyId АААААААААААААААААААААААААААААААААААААА
             var labels = {!! $dayCurrencies->where('id', 171)->pluck('updated_at') !!};
             var data = {!! $dayCurrencies->where('id', 171)->pluck('sell') !!};
-
             var ctx = document.getElementById('myChart').getContext('2d');
             var myChart = new Chart(ctx, {
                 type: 'line',
@@ -109,7 +107,7 @@
           });
         }
 
-    // DataTable
+        // DataTable
         $('#currencyTable').DataTable({
             paging: false,
             searching: false,
@@ -118,7 +116,7 @@
           }
       });
 
-    // Initial chart update
+        // Initial chart update
         updateChart(selectedCurrencyId);
     });
 
