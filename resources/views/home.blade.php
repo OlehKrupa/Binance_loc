@@ -75,8 +75,7 @@
         }
 
         function updateChart(selectedCurrencyId) {
-            console.log(selectedCurrencyId);
-
+            //ЗАМЕИНТЬ 171 НА selectedCurrencyId АААААААААААААААААААААААААААААААААААААА
             var labels = {!! $dayCurrencies->where('id', 171)->pluck('updated_at') !!};
             var data = {!! $dayCurrencies->where('id', 171)->pluck('sell') !!};
 
