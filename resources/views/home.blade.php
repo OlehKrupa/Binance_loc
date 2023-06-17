@@ -33,27 +33,32 @@
                         <button type="submit" class="btn btn-primary">Apply</button>
                     </form>
 
-
+                    @php
+                    $lastCurrencies = $dayCurrencies->reverse()->unique('name');
+                    @endphp
 
                     <!-- Add DataTable -->
-                    <table id="currencyTable" class="table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Buy</th>
-                                <th>Sell</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($currenciesHistory as $currency)
-                            <tr onclick="getID({{ $currency->id }})">
-                                <td>{{ $currency->name }}</td>
-                                <td>${{ number_format($currency->buy, 2) }}</td>
-                                <td>${{ number_format($currency->sell, 2) }}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    <form id="updateChartCurrency" method="POST" action="">
+                        @csrf
+                        <table id="currencyTable" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Buy</th>
+                                    <th>Sell</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($lastCurrencies as $currency)
+                                <tr onclick="submit({{$currency->id}})">
+                                    <td>{{ $currency->name }}</td>
+                                    <td>${{ number_format($currency->buy, 2) }}</td>
+                                    <td>${{ number_format($currency->sell, 2) }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </form>
                 </div>
             </div>
         </div>
@@ -66,45 +71,50 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 <script>
-// Chart.js
+    function submit(currencyId) {
+        var form = document.getElementById('updateChartCurrency');
+        var hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'hidden');
+        hiddenInput.setAttribute('name', 'currencyId');
+        hiddenInput.setAttribute('value', currencyId);
+        form.appendChild(hiddenInput);
+        form.submit();
+    }
+
+    // Chart.js
+    let myChart = null;
+    var selectedCurrencyId = {!! $lastCurrencies->first()->id !!};
+
     $(document).ready(function() {
-        var selectedCurrencyId = {!! $currenciesHistory->first()->id !!};
+        const ctx = document.getElementById('myChart').getContext('2d');
 
-        window.getID = function(id) {
-            selectedCurrencyId = id;
-            updateChart(selectedCurrencyId);
-        }
+        var labels = {!! $dayCurrencies->where('id', $choosenID)->pluck('updated_at') !!};
 
-        function updateChart(selectedCurrencyId) {
-            var labels = {!! $dayCurrencies->where('id', 171)->pluck('updated_at') !!};
-            var data = {!! $dayCurrencies->where('id', 171)->pluck('sell') !!};
-            var ctx = document.getElementById('myChart').getContext('2d');
-            var myChart = new Chart(ctx, {
+        var data = {!! $dayCurrencies->where('id', $choosenID)->pluck('sell') !!};
+
+        var name = {!! $dayCurrencies->where('id', $choosenID)->unique('name')->pluck('name') !!};
+
+        function updateChart() {
+            var config = {
                 type: 'line',
                 data: {
-                    labels: labels.map(function(label) {
+                    labels: labels.map(function (label) {
                         var date = new Date(label);
                         return formatDate(date);
                     }),
                     datasets: [{
-                        label: 'Currency Price',
+                        label: name,
                         data: data,
-                        backgroundColor: 'rgba(0, 123, 255, 0.5)',
-                        borderColor: 'rgba(0, 123, 255, 1)',
-                        borderWidth: 1
-                    }]
+                    }],
                 },
                 options: {
                     legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                          boxWidth: 80,
-                          fontColor: 'black'
-                      }
-                  }
-              }
-          });
+                        display: true
+                    }
+                }
+            };
+
+            myChart = new Chart(ctx, config);
         }
 
         // DataTable
@@ -117,7 +127,7 @@
       });
 
         // Initial chart update
-        updateChart(selectedCurrencyId);
+        updateChart();
     });
 
     //pretty date on chart
@@ -131,4 +141,5 @@
         };
         return date.toLocaleDateString('en-GB', options).replace(',', '');
     }
+
 </script>
