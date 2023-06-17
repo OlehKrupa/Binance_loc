@@ -30,17 +30,23 @@ class HomeController extends Controller
         $user = auth()->user();
 
         // Get start day
+        //сделать запоминание выбранного периода
         $startDate = $request->input('dateRange', 1);
 
         // Get selected user currencies 
         $selectedCurrencies = $user->currencies()->pluck('currency_id');
+
+        // Get choosen currency
+        //сделать запоминание выбранной крипты
+        $choosenID = $request->input('currencyId', $selectedCurrencies->first());
 
         // Get day currencies
         $dayCurrencies = CurrencyHistory::getDayCurrencies($selectedCurrencies, $startDate);
 
         return view('home')
         ->with('dayCurrencies', $dayCurrencies) 
-        ->with('startDate',$startDate);
+        ->with('startDate',$startDate)
+        ->with('choosenID',$choosenID);
     }
 
 }
