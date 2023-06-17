@@ -31,8 +31,12 @@ class UpdateCurrencyHistory extends Command
 
         foreach ($currencies as $currency) {
             $currencyCode = $currency->name;
-            $buyUrl = getenv('COINBASE_API_URL') . "{$currencyCode}-USD/buy";
-            $sellUrl = getenv('COINBASE_API_URL') . "{$currencyCode}-USD/sell";
+
+            //$buyUrl = env('COINBASE_API_URL') . "{$currencyCode}-USD/buy";
+            //$sellUrl = env('COINBASE_API_URL') . "{$currencyCode}-USD/sell";
+
+            $buyUrl = "https://api.coinbase.com/v2/prices/{$currencyCode}-USD/buy";
+            $sellUrl = "https://api.coinbase.com/v2/prices/{$currencyCode}-USD/sell";
 
             $buyPrice = $this->fetchPrice($buyUrl);
             $sellPrice = $this->fetchPrice($sellUrl);
