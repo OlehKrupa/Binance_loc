@@ -35,14 +35,10 @@ class HomeController extends Controller
         // Get selected user currencies 
         $selectedCurrencies = $user->currencies()->pluck('currency_id');
 
-        // Get last currencies
-        $currenciesHistory = CurrencyHistory::getLastCurrencies($selectedCurrencies);
-
         // Get day currencies
         $dayCurrencies = CurrencyHistory::getDayCurrencies($selectedCurrencies, $startDate);
 
         return view('home')
-        ->with('currenciesHistory', $currenciesHistory)
         ->with('dayCurrencies', $dayCurrencies) 
         ->with('startDate',$startDate);
     }
