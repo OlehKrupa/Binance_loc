@@ -61,14 +61,10 @@
     // DataTable
     $(document).ready(function() {
         $('#currencyTable').DataTable({
-         language: {
-          paginate: {
-           previous: "Previous ",
-           next: " Next"
-       }
-   },
-   dom: 'f t l i p'
-});
-
+            scrollY: '600px',
+            scrollCollapse: true,
+            paging: false,
+            dom: 'f t'
+        });
     });
 </script>
