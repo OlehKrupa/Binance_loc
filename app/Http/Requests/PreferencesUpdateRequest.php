@@ -2,6 +2,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class PreferencesUpdateRequest extends FormRequest
 {
@@ -12,7 +13,7 @@ class PreferencesUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return true; // Установите в true, если авторизация не требуется для этого запроса
+        return Auth::check();
     }
 
     /**
