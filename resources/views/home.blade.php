@@ -12,13 +12,22 @@
                         {{ session('status') }}
                     </div>
                     @endif
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger" role="alert">
+                            @foreach ($errors->all() as $error)
+                            {{ $error }}
+                            @endforeach
+                        </div>
+                        @endif
+                    
                     <!-- Add Chart.js graph -->
                     <div>
                         <canvas id="myChart"></canvas>
                     </div>
 
                     <!-- Add choose days -->
-                    <form id="updateChartForm" method="POST" action="{{ route('home') }}">
+                    <form id="updateChartForm" action="{{ route('home.filtered') }}" method="POST">
                         @csrf
                         <label for="dateRangeSelect">Select Date Range:</label>
                         <select id="dateRangeSelect" name="dateRange">
@@ -38,7 +47,7 @@
                     @endphp
 
                     <!-- Add DataTable -->
-                    <form id="updateChartCurrency" method="POST" action="{{ route('home') }}">
+                    <form id="updateChartCurrency" action="{{ route('home.filtered') }}" method="POST">
                         @csrf
                         <table id="currencyTable" class="table">
                             <thead>
