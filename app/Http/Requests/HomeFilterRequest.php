@@ -1,12 +1,11 @@
 <?php
-
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\CurrencyHistory;
 use Illuminate\Support\Facades\Auth;
 
-class HomeIndexRequest extends FormRequest
+class HomeFilterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,12 +22,19 @@ class HomeIndexRequest extends FormRequest
      */
     public function rules(): array
     {
-        $dayCurrencies = CurrencyHistory::pluck('id')->toArray();
+        $dayCurrencies = CurrencyHistory::pluck('currency_id')->unique()->toArray();
 
-        return [
-            'dateRange' => 'required|integer|min:0',
-            'currencyId' => 'required|in:' . implode(',', $dayCurrencies),
-        ];
+        $rules = [];
+
+        if ($this->has('dateRange')) {
+            $rules['dateRange'] = 'required|integer|min:0';
+        }
+
+        if ($this->has('currencyId')) {
+            $rules['currencyId'] = 'required|in:' . implode(',', $dayCurrencies);
+        }
+
+        return $rules;
     }
 
     /**
