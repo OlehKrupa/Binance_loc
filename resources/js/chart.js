@@ -1,3 +1,5 @@
+// chart.js
+
 function submit(currencyId) {
     var currencyIdInput = document.getElementById('currencyIdInput');
     currencyIdInput.value = currencyId;
