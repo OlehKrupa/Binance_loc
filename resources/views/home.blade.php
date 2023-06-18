@@ -18,7 +18,7 @@
                     </div>
 
                     <!-- Add choose days -->
-                    <form id="updateChartForm" method="POST" action="">
+                    <form id="updateChartForm" method="POST" action="{{ route('home') }}">
                         @csrf
                         <label for="dateRangeSelect">Select Date Range:</label>
                         <select id="dateRangeSelect" name="dateRange">
@@ -38,7 +38,7 @@
                     @endphp
 
                     <!-- Add DataTable -->
-                    <form id="updateChartCurrency" method="POST" action="">
+                    <form id="updateChartCurrency" method="POST" action="{{ route('home') }}">
                         @csrf
                         <table id="currencyTable" class="table">
                             <thead>
@@ -58,6 +58,7 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        <input type="hidden" name="currencyId" id="currencyIdInput">
                     </form>
                 </div>
             </div>
@@ -72,12 +73,9 @@
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 <script>
     function submit(currencyId) {
+        var currencyIdInput = document.getElementById('currencyIdInput');
+        currencyIdInput.value = currencyId;
         var form = document.getElementById('updateChartCurrency');
-        var hiddenInput = document.createElement('input');
-        hiddenInput.setAttribute('type', 'hidden');
-        hiddenInput.setAttribute('name', 'currencyId');
-        hiddenInput.setAttribute('value', currencyId);
-        form.appendChild(hiddenInput);
         form.submit();
     }
 
@@ -122,9 +120,9 @@
             paging: false,
             searching: false,
             language: {
-              info: "Select a cryptocurrency to display the chart"
-          }
-      });
+                info: "Select a cryptocurrency to display the chart"
+            }
+        });
 
         // Initial chart update
         updateChart();
@@ -141,5 +139,4 @@
         };
         return date.toLocaleDateString('en-GB', options).replace(',', '');
     }
-
 </script>
