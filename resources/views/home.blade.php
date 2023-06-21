@@ -14,12 +14,12 @@
                     @endif
 
                     @if ($errors->any())
-                        <div class="alert alert-danger" role="alert">
-                            @foreach ($errors->all() as $error)
-                            {{ $error }}
-                            @endforeach
-                        </div>
-                        @endif
+                    <div class="alert alert-danger" role="alert">
+                        @foreach ($errors->all() as $error)
+                        {{ $error }}
+                        @endforeach
+                    </div>
+                    @endif
                     
                     <!-- Add Chart.js graph -->
                     <div>
@@ -45,6 +45,13 @@
                     @php
                     $lastCurrencies = $dayCurrencies->reverse()->unique('name');
                     @endphp
+
+                    <div id="phpChartVariables" style="display: none;">
+                        <span id="labels">{!! $labels !!}</span>
+                        <span id="name">{!! $name !!}</span>
+                        <span id="data">{!! $data !!}</span>
+                    </div>
+
 
                     <!-- Add DataTable -->
                     <form id="updateChartCurrency" action="{{ route('home.filtered') }}" method="POST">
@@ -90,18 +97,19 @@
 
     // Chart.js
     let myChart = null;
-    var selectedCurrencyId = {!! $lastCurrencies->first()->id !!};
 
     $(document).ready(function() {
         const ctx = document.getElementById('myChart').getContext('2d');
 
-        var labels = {!! $dayCurrencies->where('id', $choosenID)->pluck('updated_at') !!};
-
-        var data = {!! $dayCurrencies->where('id', $choosenID)->pluck('sell') !!};
-
-        var name = {!! $dayCurrencies->where('id', $choosenID)->unique('name')->pluck('name') !!};
-
         function updateChart() {
+            var labelsSpan = document.getElementById('labels');
+            var nameSpan = document.getElementById('name');
+            var dataSpan = document.getElementById('data');
+
+            var labels = JSON.parse(labelsSpan.textContent);
+            var name = JSON.parse(nameSpan.textContent);
+            var data = JSON.parse(dataSpan.textContent);
+
             var config = {
                 type: 'line',
                 data: {

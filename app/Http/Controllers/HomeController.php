@@ -48,15 +48,26 @@ class HomeController extends Controller
 
         // Get chosen currency from session or use default value (first currency)
         $choosenID = $this->session->get('choosenID', $selectedCurrencies->first());
-        
 
         // Get day currencies
         $dayCurrencies = CurrencyHistory::getDayCurrencies($selectedCurrencies, $startDate);
 
+        $lastCurrencies = $dayCurrencies->reverse()->unique('name');
+
+        $labels = $dayCurrencies->where('id', $choosenID)->pluck('updated_at');
+
+        $data = $dayCurrencies->where('id', $choosenID)->pluck('sell');
+
+        $name = $dayCurrencies->where('id', $choosenID)->unique('name')->pluck('name');
+
         return view('home')
-        ->with('dayCurrencies', $dayCurrencies) 
-        ->with('startDate', $startDate)
-        ->with('choosenID', $choosenID);
+            ->with('dayCurrencies', $dayCurrencies)
+            ->with('startDate', $startDate)
+            ->with('choosenID', $choosenID)
+            ->with('lastCurrencies', $lastCurrencies)
+            ->with('labels', $labels)
+            ->with('data', $data)
+            ->with('name', $name);
     }
 
     public function filtered(HomeFilterRequest $request)
