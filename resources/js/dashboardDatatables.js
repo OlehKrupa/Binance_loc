@@ -1,3 +1,4 @@
+// datatable.js
 $(document).ready(function() {
     $('#currencyTable').DataTable({
         paging: false,

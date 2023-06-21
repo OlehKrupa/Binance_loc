@@ -87,73 +87,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
-<script>
-    function submit(currencyId) {
-        var currencyIdInput = document.getElementById('currencyIdInput');
-        currencyIdInput.value = currencyId;
-        var form = document.getElementById('updateChartCurrency');
-        form.submit();
-    }
 
-    // Chart.js
-    let myChart = null;
-
-    $(document).ready(function() {
-        const ctx = document.getElementById('myChart').getContext('2d');
-
-        function updateChart() {
-            var labelsSpan = document.getElementById('labels');
-            var nameSpan = document.getElementById('name');
-            var dataSpan = document.getElementById('data');
-
-            var labels = JSON.parse(labelsSpan.textContent);
-            var name = JSON.parse(nameSpan.textContent);
-            var data = JSON.parse(dataSpan.textContent);
-
-            var config = {
-                type: 'line',
-                data: {
-                    labels: labels.map(function (label) {
-                        var date = new Date(label);
-                        return formatDate(date);
-                    }),
-                    datasets: [{
-                        label: name,
-                        data: data,
-                    }],
-                },
-                options: {
-                    legend: {
-                        display: true
-                    }
-                }
-            };
-
-            myChart = new Chart(ctx, config);
-        }
-
-        // DataTable
-        $('#currencyTable').DataTable({
-            paging: false,
-            searching: false,
-            language: {
-                info: "Select a cryptocurrency to display the chart"
-            }
-        });
-
-        // Initial chart update
-        updateChart();
-    });
-
-    //pretty date on chart
-    function formatDate(date) {
-        var options = {
-            year: '2-digit',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit'
-        };
-        return date.toLocaleDateString('en-GB', options).replace(',', '');
-    }
-</script>
+<script src="/js/app.js" type="module"></script>
+<script src="/js/dashboard.js" type="module"></script>
+<script src="/js/dashboardChart.js" type="module"></script>
+<script src="/js/dashboardDatatables.js" type="module"></script>
