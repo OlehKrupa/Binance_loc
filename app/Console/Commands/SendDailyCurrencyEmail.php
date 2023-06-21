@@ -37,7 +37,7 @@ class SendDailyCurrencyEmail extends Command
             $currenciesData = CurrencyHistory::analyzeCurrencyTrend($selectedCurrencies);
 
             Mail::to($user->email)->send(new DailyCryptoEmail($user, $currenciesData, $selectedCurrencies));
-            sleep(1);
+            sleep(2);
         }
 
         $this->info('Daily crypto emails sent successfully.');
