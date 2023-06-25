@@ -89,6 +89,7 @@ class HomeController extends Controller
             $this->session->put('choosenID', $choosenID);
         }
 
+
         return $this->index();
     }
 }
