@@ -52,7 +52,6 @@
                         <span id="data">{!! $data !!}</span>
                     </div>
 
-
                     <!-- Add DataTable -->
                     <form id="updateChartCurrency" action="{{ route('home.filtered') }}" method="POST">
                         @csrf
@@ -66,7 +65,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($lastCurrencies as $currency)
-                                <tr onclick="submit({{$currency->id}})">
+                                <tr onclick="submitForm({{$currency->id}})">
                                     <td>{{ $currency->name }}</td>
                                     <td>${{ number_format($currency->buy, 2) }}</td>
                                     <td>${{ number_format($currency->sell, 2) }}</td>
@@ -83,9 +82,15 @@
 </div>
 @endsection
 
+<script>
+    function submitForm(currencyId) {
+        document.getElementById('currencyIdInput').value = currencyId;
+        document.getElementById('updateChartCurrency').submit();
+    }
+</script>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
-
 <script src="{{ mix('js/dashboard.js') }}" defer></script>
