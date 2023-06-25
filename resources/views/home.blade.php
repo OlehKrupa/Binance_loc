@@ -88,7 +88,4 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 
-<script src="/js/app.js" type="module"></script>
-<script src="/js/dashboard.js" type="module"></script>
-<script src="/js/dashboardChart.js" type="module"></script>
-<script src="/js/dashboardDatatables.js" type="module"></script>
+<script src="{{ mix('js/dashboard.js') }}" defer></script>
