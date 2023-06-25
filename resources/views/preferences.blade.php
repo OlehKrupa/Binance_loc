@@ -57,14 +57,4 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 
-<script>
-    // DataTable
-    $(document).ready(function() {
-        $('#currencyTable').DataTable({
-            scrollY: '600px',
-            scrollCollapse: true,
-            paging: false,
-            dom: 'f t'
-        });
-    });
-</script>
+<script src="{{ mix('js/preferences.js') }}" defer></script>
