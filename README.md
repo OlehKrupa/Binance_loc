@@ -7,19 +7,19 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-### First start
+# First start
 
 use 
-php artisan migrate:refresh --seed
+### php artisan migrate:refresh --seed
 to migrate MySQL DB with seeders
 
 after that use
-php artisan currency:update-history
+### php artisan currency:update-history
 to update cryptocurrency rates
 
 ## Usefull commands
-# php artisan email:daily-crypto
+### php artisan email:daily-crypto
 to send emails with daily cryptocurrency price dynamics
 
-# php artisan currency:update-history
+### php artisan currency:update-history
 to update cryptocurrency rates
