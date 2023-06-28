@@ -58,11 +58,5 @@ $(document).ready(function () {
     }
   });
 });
-
-//submit currencyId from datatables
-function submitForm(currencyId) {
-  document.getElementById('currencyIdInput').value = currencyId;
-  document.getElementById('updateChartCurrency').submit();
-}
 /******/ })()
 ;
