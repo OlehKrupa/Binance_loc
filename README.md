@@ -9,17 +9,12 @@
 
 # First start
 
-use 
 ### php artisan migrate:refresh --seed
 to migrate MySQL DB with seeders
 
-after that use
 ### php artisan currency:update-history
 to update cryptocurrency rates
 
-## Usefull commands
+## Other commands
 ### php artisan email:daily-crypto
 to send emails with daily cryptocurrency price dynamics
-
-### php artisan currency:update-history
-to update cryptocurrency rates
