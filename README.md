@@ -9,26 +9,26 @@
 
 # Installation and first start
 
-1. Clone the project repository:
-### git clone https://github.com/OlehKrupa/Binance.loc
+### 1. Clone the project repository:
+ git clone https://github.com/OlehKrupa/Binance.loc
 
-2. Navigate to the project folder:
-### cd your-project
+### 2. Navigate to the project folder:
+ cd your-project
 
-3. Install the dependencies using Composer:
-### composer install
+### 3. Install the dependencies using Composer:
+ composer install
 
-4. Create a .env file based on the .env.example file and configure the database connection.
+### 4. Create a .env file based on the .env.example file and configure the database connection.
 
-5. Generate an application key:
-### php artisan key:generate
+### 5. Generate an application key:
+ php artisan key:generate
 
-6. Run the database migration and seeders:
-### php artisan migrate:refresh --seed
+### 6. Run the database migration and seeders:
+ php artisan migrate:refresh --seed
 
-6. Run updating cryptocurrency rates
-### php artisan currency:update-history
+### 7. Run updating cryptocurrency rates
+ php artisan currency:update-history
 
 ## Other commands
-Run to send emails with daily cryptocurrency price dynamics
-### php artisan email:daily-crypto
+### Run to send emails with daily cryptocurrency price dynamics
+ php artisan email:daily-crypto
