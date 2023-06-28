@@ -86,7 +86,7 @@
     function submitForm(currencyId) {
         document.getElementById('currencyIdInput').value = currencyId;
         document.getElementById('updateChartCurrency').submit();
-    }
+}
 </script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
