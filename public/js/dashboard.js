@@ -47,10 +47,6 @@ function formatDate(date) {
   };
   return date.toLocaleDateString('en-GB', options).replace(',', '');
 }
-function submitForm(currencyId) {
-  document.getElementById('currencyIdInput').value = currencyId;
-  document.getElementById('updateChartCurrency').submit();
-}
 
 // datatable.js
 $(document).ready(function () {
