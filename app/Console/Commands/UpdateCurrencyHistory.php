@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\Currency;
-use App\Models\CurrencyHistory;
+use App\Services\CurrencyService;
+use App\Services\CurrencyHistoryService;
 
 class UpdateCurrencyHistory extends Command
 {
@@ -23,11 +23,41 @@ class UpdateCurrencyHistory extends Command
     protected $description = 'Update currency history from Coinbase API';
 
     /**
+     * The CurrencyService instance.
+     *
+     * @var CurrencyService
+     */
+    private $currencyService;
+
+    /**
+     * The CurrencyHistoryService instance.
+     *
+     * @var CurrencyHistoryService
+     */
+    private $currencyHistoryService;
+
+    /**
+     * Create a new command instance.
+     *
+     * @param CurrencyService $currencyService
+     * @param CurrencyHistoryService $currencyHistoryService
+     */
+    public function __construct(
+        CurrencyService $currencyService,
+        CurrencyHistoryService $currencyHistoryService
+    ) {
+        parent::__construct();
+
+        $this->currencyService = $currencyService;
+        $this->currencyHistoryService = $currencyHistoryService;
+    }
+
+    /**
      * Execute the console command.
      */
     public function handle()
     {
-        $currencies = Currency::all();
+        $currencies = $this->currencyService->getAllCurrencies();
 
         foreach ($currencies as $currency) {
             $currencyCode = $currency->name;
@@ -40,12 +70,9 @@ class UpdateCurrencyHistory extends Command
 
             $buyPrice = $this->fetchPrice($buyUrl);
             $sellPrice = $this->fetchPrice($sellUrl);
+            $currencyId = $currency->id;
 
-            $currencyHistory = new CurrencyHistory();
-            $currencyHistory->currency_id = $currency->id;
-            $currencyHistory->sell = $sellPrice;
-            $currencyHistory->buy = $buyPrice;
-            $currencyHistory->save();
+            $currencyHistory = $this->currencyHistoryService->createCurrencyHistory($currencyId, $sellPrice, $buyPrice);
         }
 
         $this->info('Currency history updated successfully!');
@@ -65,6 +92,6 @@ class UpdateCurrencyHistory extends Command
             return $data['data']['amount'];
         }
 
-        return 0; 
+        return 0;
     }
 }
