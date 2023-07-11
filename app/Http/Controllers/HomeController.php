@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
-use App\Models\CurrencyHistory;
 use Carbon\Carbon;
 use Illuminate\Session\Store;
 use App\Http\Requests\HomeFilterRequest;
+use App\Models\User;
+use App\Models\CurrencyHistory;
 
 class HomeController extends Controller
 {

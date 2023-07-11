@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Repositories\UserRepository;
+use App\Models\User;
 
 class UserService
 {
@@ -11,6 +12,24 @@ class UserService
     {
         $this->userRepository = $userRepository;
     }
+
+    public function getSubscribedUsers()
+    {
+        return $this->userRepository->subscribedUsers(); 
+    }
+
+    public function getUserCurrencies(User $user)
+    {
+        return $this->userRepository->getSelectedCurrencies($user);
+    }
+
+    /*
+    //полиморфизм вышел из чата
+    public function getUserCurrencies(int $id)
+    {
+        return $this->userRepository->getSelectedCurrencies($id);
+    }
+    */
 
     public function getUserById($id)
     {

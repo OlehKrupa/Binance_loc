@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Models\Currency;
+use App\Models\User;
 
 class CurrencyRepository
 {

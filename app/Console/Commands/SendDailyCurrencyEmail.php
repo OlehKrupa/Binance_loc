@@ -3,11 +3,15 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\DailyCryptoEmail;
 use App\Models\User;
 use App\Models\Currency;
 use App\Models\CurrencyHistory;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\DailyCryptoEmail;
+
+use App\Services\UserService;
+use App\Services\CurrencyService;
+use App\Services\CurrencyHistoryService;
 
 class SendDailyCurrencyEmail extends Command
 {
@@ -26,15 +30,54 @@ class SendDailyCurrencyEmail extends Command
     protected $description = 'Send daily crypto emails to users';
 
     /**
+     * The UserService instance.
+     *
+     * @var UserService
+     */
+    private $userService;
+
+    /**
+     * The CurrencyService instance.
+     *
+     * @var CurrencyService
+     */
+    private $currencyService;
+
+    /**
+     * The CurrencyHistoryService instance.
+     *
+     * @var CurrencyHistoryService
+     */
+    private $currencyHistoryService;
+
+    /**
+     * Create a new command instance.
+     *
+     * @param UserService $userService
+     * @param CurrencyService $currencyService
+     * @param CurrencyHistoryService $currencyHistoryService
+     */
+    public function __construct(
+        UserService $userService,
+        CurrencyService $currencyService,
+        CurrencyHistoryService $currencyHistoryService
+    ) {
+        parent::__construct();
+        $this->userService = $userService;
+        $this->currencyService = $currencyService;
+        $this->currencyHistoryService = $currencyHistoryService;
+    }
+
+    /**
      * Execute the console command.
      */
     public function handle()
     {
-        $users = User::whereNotNull('subscribed_at')->get();
+        $users = $this->userService->getSubscribedUsers();
 
         foreach ($users as $user) {
             $selectedCurrencies = $user->currencies()->pluck('currency_id')->toArray();
-            $currenciesData = CurrencyHistory::analyzeCurrencyTrend($selectedCurrencies);
+            $currenciesData = $this->currencyHistoryService->analyzeCurrencyTrend($selectedCurrencies);
 
             Mail::to($user->email)->send(new DailyCryptoEmail($user, $currenciesData, $selectedCurrencies));
             sleep(2);
