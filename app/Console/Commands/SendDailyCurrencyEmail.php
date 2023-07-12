@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\DailyCryptoEmail;
-
 use App\Services\UserService;
 use App\Services\CurrencyService;
 use App\Services\CurrencyHistoryService;
