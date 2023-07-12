@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Models\User;
@@ -8,6 +9,11 @@ class UserRepository
     public function subscribedUsers()
     {
         return User::whereNotNull('subscribed_at')->get();
+    }
+
+    public function getUsersTelegramId()
+    {
+        return User::where('telegram_Id', '!=', 0)->get();
     }
 
     public function getUserCurrencies(User $user)

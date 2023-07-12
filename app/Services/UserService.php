@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Repositories\UserRepository;
@@ -15,12 +16,17 @@ class UserService
 
     public function getSubscribedUsers()
     {
-        return $this->userRepository->subscribedUsers(); 
+        return $this->userRepository->subscribedUsers();
     }
 
     public function getUserCurrencies(User $user)
     {
         return $this->userRepository->getUserCurrencies($user);
+    }
+    
+    public function getUsersTelegramId()
+    {
+        return $this->userRepository->getUsersTelegramId();
     }
 
     public function getUserById($id)
