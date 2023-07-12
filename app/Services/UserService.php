@@ -20,20 +20,22 @@ class UserService
 
     public function getUserCurrencies(User $user)
     {
-        return $this->userRepository->getSelectedCurrencies($user);
+        return $this->userRepository->getUserCurrencies($user);
     }
-
-    /*
-    //полиморфизм вышел из чата
-    public function getUserCurrencies(int $id)
-    {
-        return $this->userRepository->getSelectedCurrencies($id);
-    }
-    */
 
     public function getUserById($id)
     {
         return $this->userRepository->getById($id);
+    }
+
+    public function clearSelectedCurrencies(User $user)
+    {
+        $user->currencies()->detach();
+    }
+
+    public function addSelectedCurrency(User $user, int $currencyId)
+    {
+        $user->currencies()->attach($currencyId);
     }
 
     public function createUser($data)

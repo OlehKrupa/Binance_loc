@@ -8,6 +8,8 @@ use Illuminate\Session\Store;
 use App\Http\Requests\HomeFilterRequest;
 use App\Models\User;
 use App\Models\CurrencyHistory;
+use App\Services\UserService;
+use App\Services\CurrencyHistoryService;
 
 class HomeController extends Controller
 {
@@ -19,15 +21,36 @@ class HomeController extends Controller
     protected $session;
 
     /**
+     * The UserService instance.
+     *
+     * @var UserService
+     */
+    private $userService;
+
+    /**
+     * The CurrencyHistoryService instance.
+     *
+     * @var CurrencyHistoryService
+     */
+    private $currencyHistoryService;
+
+    /**
      * Create a new controller instance.
      *
      * @param  \Illuminate\Session\Store  $session
+     * @param  \App\Services\UserService  $userService
+     * @param  \App\Services\CurrencyHistoryService  $currencyHistoryService
      * @return void
      */
-    public function __construct(Store $session)
-    {
+    public function __construct(
+        Store $session,
+        UserService $userService,
+        CurrencyHistoryService $currencyHistoryService
+    ) {
         $this->middleware('auth');
         $this->session = $session;
+        $this->userService = $userService;
+        $this->currencyHistoryService = $currencyHistoryService;
     }
 
     /**
@@ -44,13 +67,13 @@ class HomeController extends Controller
         $startDate = $this->session->get('startDate', 1);
 
         // Get selected user currencies 
-        $selectedCurrencies = $user->currencies()->pluck('currency_id');
+        $selectedCurrencies = $this->userService->getUserCurrencies($user);
 
         // Get chosen currency from session or use default value (first currency)
         $choosenID = $this->session->get('choosenID', $selectedCurrencies->first());
 
         // Get day currencies
-        $dayCurrencies = CurrencyHistory::getDayCurrencies($selectedCurrencies, $startDate);
+        $dayCurrencies = $this->currencyHistoryService->getDayCurrencies($selectedCurrencies, $startDate);
 
         $lastCurrencies = $dayCurrencies->reverse()->unique('name');
 

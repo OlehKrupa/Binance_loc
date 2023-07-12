@@ -12,19 +12,8 @@ class UserRepository
 
     public function getUserCurrencies(User $user)
     {
-        return $user->currencies()->pluck('currency_id')->toArray();
+        return $user->currencies()->pluck('currency_id');
     }
-
-    /*
-    public function getUserCurrencies(int $id)
-    {
-        $user = User::find($id);
-        if ($user) {
-            return $user->currencies()->pluck('currency_id')->toArray();
-        }
-        return [];
-    }
-    */
 
     public function getById($id)
     {
