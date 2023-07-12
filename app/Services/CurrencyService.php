@@ -22,6 +22,11 @@ class CurrencyService
         return $this->currencyRepository->getAllCurrencies();
     }
 
+    public function getAllCurrenciesId()
+    {
+        return $this->currencyRepository->getAllCurrenciesId();
+    }
+
     public function createCurrency($data)
     {
         return $this->currencyRepository->create($data);

@@ -16,6 +16,11 @@ class CurrencyRepository
         return Currency::all();
     }
 
+    public function getAllCurrenciesId()
+    {
+        return Currency::all()->pluck('id')->toArray();
+    }
+
     public function create($data)
     {
         return Currency::create($data);
