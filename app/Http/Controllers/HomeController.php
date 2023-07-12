@@ -108,8 +108,6 @@ class HomeController extends Controller
             // Save the updated chosen currency to session
             $this->session->put('choosenID', $choosenID);
         }
-
-
         return $this->index();
     }
 }
