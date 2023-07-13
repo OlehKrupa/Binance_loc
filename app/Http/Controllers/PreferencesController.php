@@ -19,7 +19,7 @@ class PreferencesController extends Controller
 
     public function index()
     {
-        $currencies = $this->currencyService->getAllCurrencies();
+        $currencies = $this->currencyService->all();
 
         // Get the current user
         $user = auth()->user();
@@ -37,11 +37,11 @@ class PreferencesController extends Controller
 
         // Clear previously selected cryptocurrencies for the user
         $user = auth()->user();
-        $this->userService->clearSelectedCurrencies($user);
+        $this->userService->detachCurrencies($user);
 
         // Add the newly selected cryptocurrencies
         foreach ($selectedCurrencies as $currencyId) {
-            $this->userService->addSelectedCurrency($user, $currencyId);
+            $this->userService->attachCurrency($user, $currencyId);
         }
 
         // Redirect to the "/home" page with a success message

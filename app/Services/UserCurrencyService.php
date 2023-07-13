@@ -2,23 +2,22 @@
 namespace App\Services;
 
 use App\Repositories\UserCurrencyRepository;
+use App\Services\BaseService;
 
-class UserCurrencyService
+class UserCurrencyService extends BaseService
 {
-    protected $userCurrencyRepository;
-
-    public function __construct(UserCurrencyRepository $userCurrencyRepository)
+    public function __construct(UserCurrencyRepository $repo)
     {
-        $this->userCurrencyRepository = $userCurrencyRepository;
+        $this->repo = $repo;
     }
 
     public function createUserCurrency($data)
     {
-        return $this->userCurrencyRepository->create($data);
+        return $this->repo->create($data);
     }
 
     public function deleteUserCurrency($userId, $currencyId)
     {
-        return $this->userCurrencyRepository->delete($userId, $currencyId);
+        return $this->repo->delete($userId, $currencyId);
     }
 }

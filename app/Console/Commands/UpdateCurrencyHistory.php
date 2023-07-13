@@ -58,7 +58,7 @@ class UpdateCurrencyHistory extends Command
      */
     public function handle()
     {
-        $currencies = $this->currencyService->getAllCurrencies();
+        $currencies = $this->currencyService->all();
 
         foreach ($currencies as $currency) {
             $currencyCode = $currency->name;

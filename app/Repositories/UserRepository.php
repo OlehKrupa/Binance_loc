@@ -2,10 +2,16 @@
 
 namespace App\Repositories;
 
+use App\Repositories\BaseRepository;
 use App\Models\User;
 
-class UserRepository
+class UserRepository extends BaseRepository
 {
+    public function __construct(User $model)
+    {
+        $this->model = $model;
+    }
+
     public function subscribedUsers()
     {
         return User::whereNotNull('subscribed_at')->get();
@@ -21,28 +27,13 @@ class UserRepository
         return $user->currencies()->pluck('currency_id');
     }
 
-    public function getById($id)
+    public function detachCurrencies(User $user)
     {
-        return User::find($id);
+        $user->currencies()->detach();
     }
 
-    public function create($data)
+    public function attachCurrency(User $user, int $currencyId)
     {
-        return User::create($data);
-    }
-
-    public function update($id, $data)
-    {
-        $user = User::find($id);
-        if ($user) {
-            $user->update($data);
-            return $user;
-        }
-        return null;
-    }
-
-    public function delete($id)
-    {
-        return User::destroy($id);
+        $user->currencies()->attach($currencyId);
     }
 }
