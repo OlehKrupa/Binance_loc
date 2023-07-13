@@ -33,13 +33,6 @@ class SendDailyCurrencyEmail extends Command
     private $userService;
 
     /**
-     * The CurrencyService instance.
-     *
-     * @var CurrencyService
-     */
-    private $currencyService;
-
-    /**
      * The CurrencyHistoryService instance.
      *
      * @var CurrencyHistoryService
@@ -50,17 +43,14 @@ class SendDailyCurrencyEmail extends Command
      * Create a new command instance.
      *
      * @param UserService $userService
-     * @param CurrencyService $currencyService
      * @param CurrencyHistoryService $currencyHistoryService
      */
     public function __construct(
         UserService $userService,
-        CurrencyService $currencyService,
         CurrencyHistoryService $currencyHistoryService
     ) {
         parent::__construct();
         $this->userService = $userService;
-        $this->currencyService = $currencyService;
         $this->currencyHistoryService = $currencyHistoryService;
     }
 
