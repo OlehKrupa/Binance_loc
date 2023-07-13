@@ -3,10 +3,31 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\CurrencyHistory;
+use App\Services\CurrencyHistoryService;
 use Illuminate\Support\Facades\Auth;
 
 class HomeFilterRequest extends FormRequest
 {
+
+    /**
+     * The CurrencyHistoryService instance.
+     *
+     * @var CurrencyHistoryService
+     */
+    private $currencyHistoryService;
+
+    /**
+     * Create a new command instance.
+     *
+     * @param CurrencyHistoryService $currencyHistoryService
+     */
+    public function __construct(
+        CurrencyHistoryService $currencyHistoryService
+    ) {
+        parent::__construct();
+        $this->currencyHistoryService = $currencyHistoryService;
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -22,7 +43,7 @@ class HomeFilterRequest extends FormRequest
      */
     public function rules(): array
     {
-        $dayCurrencies = CurrencyHistory::pluck('currency_id')->unique()->toArray();
+        $dayCurrencies = $this->currencyHistoryService->getUniqueCurrenciesId();
 
         $rules = [];
 
