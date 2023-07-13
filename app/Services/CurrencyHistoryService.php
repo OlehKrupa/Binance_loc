@@ -2,14 +2,13 @@
 namespace App\Services;
 
 use App\Repositories\CurrencyHistoryRepository;
+use App\Services\BaseService;
 
-class CurrencyHistoryService
+class CurrencyHistoryService extends BaseService
 {
-    protected $currencyHistoryRepository;
-
-    public function __construct(CurrencyHistoryRepository $currencyHistoryRepository)
+    public function __construct(CurrencyHistoryRepository $repo)
     {
-        $this->currencyHistoryRepository = $currencyHistoryRepository;
+        $this->repo = $repo;
     }
 
     public function createCurrencyHistory($currencyId, $sellPrice, $buyPrice)
@@ -20,21 +19,26 @@ class CurrencyHistoryService
             'buy' => $buyPrice,
         ];
 
-        return $this->currencyHistoryRepository->create($data);
+        return $this->repo->create($data);
+    }
+
+    public function getUniqueCurrenciesId(): array
+    {
+        return $this->repo->getUniqueCurrenciesId();
     }
 
     public function getLastCurrencies($selectedCurrencies)
     {
-        return $this->currencyHistoryRepository->getLastCurrencies($selectedCurrencies);
+        return $this->repo->getLastCurrencies($selectedCurrencies);
     }
 
     public function getDayCurrencies($selectedCurrencies, $days)
     {
-        return $this->currencyHistoryRepository->getDayCurrencies($selectedCurrencies, $days);
+        return $this->repo->getDayCurrencies($selectedCurrencies, $days);
     }
 
     public function analyzeCurrencyTrend($selectedCurrencies)
     {
-        return $this->currencyHistoryRepository->analyzeCurrencyTrend($selectedCurrencies);
+        return $this->repo->analyzeCurrencyTrend($selectedCurrencies);
     }
 }

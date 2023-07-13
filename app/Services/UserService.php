@@ -4,58 +4,37 @@ namespace App\Services;
 
 use App\Repositories\UserRepository;
 use App\Models\User;
+use App\Services\BaseService;
 
-class UserService
+class UserService extends BaseService
 {
-    protected $userRepository;
-
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $repo)
     {
-        $this->userRepository = $userRepository;
+        $this->repo = $repo;
     }
 
     public function getSubscribedUsers()
     {
-        return $this->userRepository->subscribedUsers();
+        return $this->repo->subscribedUsers();
     }
 
     public function getUserCurrencies(User $user)
     {
-        return $this->userRepository->getUserCurrencies($user);
+        return $this->repo->getUserCurrencies($user);
     }
     
     public function getUsersTelegramId()
     {
-        return $this->userRepository->getUsersTelegramId();
+        return $this->repo->getUsersTelegramId();
     }
 
-    public function getUserById($id)
+    public function detachCurrencies(User $user)
     {
-        return $this->userRepository->getById($id);
+        return $this->repo->detachCurrencies($user);
     }
 
-    public function clearSelectedCurrencies(User $user)
+    public function attachCurrency(User $user, int $currencyId)
     {
-        $user->currencies()->detach();
-    }
-
-    public function addSelectedCurrency(User $user, int $currencyId)
-    {
-        $user->currencies()->attach($currencyId);
-    }
-
-    public function createUser($data)
-    {
-        return $this->userRepository->create($data);
-    }
-
-    public function updateUser($id, $data)
-    {
-        return $this->userRepository->update($id, $data);
-    }
-
-    public function deleteUser($id)
-    {
-        return $this->userRepository->delete($id);
+        return $this->repo->attachCurrency($user, $currencyId);
     }
 }
