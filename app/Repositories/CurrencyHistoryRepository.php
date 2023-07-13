@@ -1,16 +1,21 @@
 <?php
 namespace App\Repositories;
 
+use App\Repositories\BaseRepository;
 use App\Models\CurrencyHistory;
 use App\Models\Currency;
 use Carbon\Carbon;
 
-class CurrencyHistoryRepository
+class CurrencyHistoryRepository extends BaseRepository
 {
-
-    public function create($data)
+    public function __construct(CurrencyHistory $model)
     {
-        return CurrencyHistory::create($data);
+        $this->model = $model;
+    }
+
+    public function getUniqueCurrenciesId(): array
+    {
+        return CurrencyHistory::pluck('currency_id')->unique()->toArray();
     }
     
     public static function getLastCurrencies($selectedCurrencies)

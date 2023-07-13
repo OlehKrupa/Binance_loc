@@ -1,19 +1,13 @@
 <?php
 namespace App\Repositories;
 
+use App\Repositories\BaseRepository;
 use App\Models\UserCurrency;
 
-class UserCurrencyRepository
+class UserCurrencyRepository extends BaseRepository
 {
-    public function create($data)
+    public function __construct(UserCurrency $model)
     {
-        return UserCurrency::create($data);
-    }
-
-    public function delete($userId, $currencyId)
-    {
-        return UserCurrency::where('user_id', $userId)
-            ->where('currency_id', $currencyId)
-            ->delete();
+        $this->model = $model;
     }
 }
