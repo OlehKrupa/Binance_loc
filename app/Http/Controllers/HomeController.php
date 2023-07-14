@@ -110,4 +110,16 @@ class HomeController extends Controller
         }
         return $this->index();
     }
+
+    public function test(Request $request)
+    {
+        // Получаем значение переменной, переданной клиентом
+        $clientVariable = $_POST['variableToSend'];
+        // Выполняем необходимые операции на сервере с полученными данными
+        // Генерируем ответ с переменной для клиента
+        $serverVariable = "Значение переменной с сервера";
+        // Отправляем ответ обратно клиенту в формате JSON
+        $response = array('serverVariable' => $serverVariable);
+        echo json_encode($response);
+    }
 }
