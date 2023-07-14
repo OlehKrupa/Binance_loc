@@ -60,8 +60,8 @@ class HomeController extends Controller
         // Get current user
         $user = auth()->user();
 
-        // Get start day from session or use default value (1)
-        $startDate = $this->session->get('startDate', 1);
+        // Get start day from session or use default value (48)
+        $startDate = $this->session->get('startDate', 48);
 
         // Get selected user currencies 
         $selectedCurrencies = $this->userService->getUserCurrencies($user);
@@ -70,7 +70,7 @@ class HomeController extends Controller
         $choosenID = $this->session->get('choosenID', $selectedCurrencies->first());
 
         // Get day currencies
-        $dayCurrencies = $this->currencyHistoryService->getDayCurrencies($selectedCurrencies, $startDate);
+        $dayCurrencies = $this->currencyHistoryService->getHourCurrencies($selectedCurrencies, $startDate);
 
         $lastCurrencies = $dayCurrencies->reverse()->unique('name');
 

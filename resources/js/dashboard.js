@@ -1,5 +1,13 @@
 //main.js
 $(document).ready(function() {
+    $('#currencyTable').DataTable({
+        paging: false,
+        searching: false,
+        language: {
+            info: "Select a cryptocurrency to display the chart"
+        }
+    });
+    
     const labelsSpan = document.getElementById('labels');
     const nameSpan = document.getElementById('name');
     const dataSpan = document.getElementById('data');
@@ -47,14 +55,3 @@ function formatDate(date) {
     };
     return date.toLocaleDateString('en-GB', options).replace(',', '');
 }
-
-// datatable.js
-$(document).ready(function() {
-    $('#currencyTable').DataTable({
-        paging: false,
-        searching: false,
-        language: {
-            info: "Select a cryptocurrency to display the chart"
-        }
-    });
-});

@@ -23,6 +23,7 @@ Route::post('/preferences/update', [App\Http\Controllers\PreferencesController::
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware('checkCryptocurrencyCount')->name('home');
 Route::post('/home', [App\Http\Controllers\HomeController::class, 'filtered'])->middleware('checkCryptocurrencyCount')->name('home.filtered');
+Route::post('/home/test', [App\Http\Controllers\HomeController::class, 'test'])->name('home.test');
 
 Auth::routes();
 
