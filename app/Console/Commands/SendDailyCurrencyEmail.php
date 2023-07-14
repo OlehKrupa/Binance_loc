@@ -2,12 +2,14 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\Mailer;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\DailyCryptoEmail;
 use App\Services\UserService;
 use App\Services\CurrencyService;
 use App\Services\CurrencyHistoryService;
+use Illuminate\Support\Carbon;
 
 class SendDailyCurrencyEmail extends Command
 {
@@ -65,8 +67,7 @@ class SendDailyCurrencyEmail extends Command
             $selectedCurrencies = $user->currencies()->pluck('currency_id')->toArray();
             $currenciesData = $this->currencyHistoryService->analyzeCurrencyTrend($selectedCurrencies);
 
-            Mail::to($user->email)->send(new DailyCryptoEmail($user, $currenciesData, $selectedCurrencies));
-            sleep(2);
+            Mailer::dispatch($user, $currenciesData, $selectedCurrencies)->delay(now()->addSeconds(2));
         }
 
         $this->info('Daily crypto emails sent successfully.');

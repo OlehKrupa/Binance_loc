@@ -30,5 +30,9 @@
  php artisan currency:update-history
 
 ## Other commands
+
 ### Run to send emails with daily cryptocurrency price dynamics
  php artisan email:daily-crypto
+
+### Use to run schedule commands on the background
+ php artisan schedule:work &
