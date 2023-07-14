@@ -74,8 +74,6 @@
                             </table>
                             <input type="hidden" name="currencyId" id="currencyIdInput">
                         </form>
-
-                        <button onclick="test()">Test</button>
                     </div>
                 </div>
             </div>
@@ -95,30 +93,3 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 <script src="{{ mix('js/dashboard.js') }}" defer></script>
-
-<script>
-    function test() {
-        console.log(1);
-        var dataToSend = {
-            variableToSend: "Send"
-        };
-
-        //Worked
-
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: "/home/test",
-            type: "POST",
-            data: dataToSend,
-            success: function(response) {
-                var serverVariable = response.serverVariable;
-                console.log("Receive:", serverVariable);
-            },
-            error: function(xhr, status, error) {
-                console.error("Error:", error);
-            }
-        });
-    }
-</script>
