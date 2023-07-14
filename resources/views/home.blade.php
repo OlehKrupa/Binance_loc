@@ -31,8 +31,8 @@
                         @csrf
                         <label for="dateRangeSelect">Select Date Range:</label>
                         <select id="dateRangeSelect" name="dateRange">
-                        <option value="6" {{ $startDate == 6 ? 'selected' : '' }}>6 hours</option>
-                        <option value="15" {{ $startDate == 12 ? 'selected' : '' }}>12 hours</option>
+                            <option value="6" {{ $startDate == 6 ? 'selected' : '' }}>6 hours</option>
+                            <option value="12" {{ $startDate == 12 ? 'selected' : '' }}>12 hours</option>
                             <option value="24" {{ $startDate == 24 ? 'selected' : '' }}>1 day</option>
                             <option value="48" {{ $startDate == 48 ? 'selected' : '' }}>2 days</option>
                             <option value="168" {{ $startDate == 168 ? 'selected' : '' }}>7 days</option>
@@ -74,6 +74,8 @@
                         </table>
                         <input type="hidden" name="currencyId" id="currencyIdInput">
                     </form>
+
+                    <button onclick="test()">Test</button>
                 </div>
             </div>
         </div>
@@ -88,8 +90,33 @@
     }
 </script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 <script src="{{ mix('js/dashboard.js') }}" defer></script>
+
+<script>
+    function test() {
+        // Создаем объект с данными, которые хотим отправить на сервер
+        var dataToSend = {
+            variableToSend: "Значение для передачи"
+        };
+
+        // Выполняем AJAX POST-запрос
+        $.ajax({
+            url: "/home/test", // Укажите URL вашего сервера
+            type: "POST",
+            data: dataToSend,
+            success: function(response) {
+                // Обработка успешного ответа от сервера
+                var serverVariable = response.serverVariable;
+                console.log("Получена переменная сервера:", serverVariable);
+            },
+            error: function(xhr, status, error) {
+                // Обработка ошибки запроса
+                console.error("Ошибка AJAX-запроса:", error);
+            }
+        });
+    }
+</script>
