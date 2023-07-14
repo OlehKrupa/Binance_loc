@@ -60,7 +60,7 @@ class HomeController extends Controller
         // Get current user
         $user = auth()->user();
 
-        // Get start day from session or use default value (1)
+        // Get start day from session or use default value (48)
         $startDate = $this->session->get('startDate', 48);
 
         // Get selected user currencies 
