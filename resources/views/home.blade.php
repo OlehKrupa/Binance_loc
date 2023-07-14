@@ -98,24 +98,20 @@
 
 <script>
     function test() {
-        // Создаем объект с данными, которые хотим отправить на сервер
         var dataToSend = {
-            variableToSend: "Значение для передачи"
+            variableToSend: "Send"
         };
 
-        // Выполняем AJAX POST-запрос
         $.ajax({
-            url: "/home/test", // Укажите URL вашего сервера
+            url: "/home/test",
             type: "POST",
             data: dataToSend,
             success: function(response) {
-                // Обработка успешного ответа от сервера
                 var serverVariable = response.serverVariable;
-                console.log("Получена переменная сервера:", serverVariable);
+                console.log("Receive:", serverVariable);
             },
             error: function(xhr, status, error) {
-                // Обработка ошибки запроса
-                console.error("Ошибка AJAX-запроса:", error);
+                console.error("Error:", error);
             }
         });
     }
