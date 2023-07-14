@@ -32,9 +32,9 @@ class CurrencyHistoryService extends BaseService
         return $this->repo->getLastCurrencies($selectedCurrencies);
     }
 
-    public function getDayCurrencies($selectedCurrencies, $days)
+    public function getHourCurrencies($selectedCurrencies, $hours)
     {
-        return $this->repo->getDayCurrencies($selectedCurrencies, $days);
+        return $this->repo->getHourCurrencies($selectedCurrencies, $hours);
     }
 
     public function analyzeCurrencyTrend($selectedCurrencies)

@@ -31,13 +31,12 @@
                         @csrf
                         <label for="dateRangeSelect">Select Date Range:</label>
                         <select id="dateRangeSelect" name="dateRange">
-                            <option value="0" {{ $startDate == 0 ? 'selected' : '' }}>1 day</option>
-                            <option value="1" {{ $startDate == 1 ? 'selected' : '' }}>2 days</option>
-                            <option value="2" {{ $startDate == 2 ? 'selected' : '' }}>3 days</option>
-                            <option value="6" {{ $startDate == 6 ? 'selected' : '' }}>7 days</option>
-                            <option value="13" {{ $startDate == 13 ? 'selected' : '' }}>14 days</option>
-                            <option value="20" {{ $startDate == 20 ? 'selected' : '' }}>21 days</option>
-                            <option value="29" {{ $startDate == 29 ? 'selected' : '' }}>30 days</option>
+                        <option value="6" {{ $startDate == 6 ? 'selected' : '' }}>6 hours</option>
+                        <option value="15" {{ $startDate == 12 ? 'selected' : '' }}>12 hours</option>
+                            <option value="24" {{ $startDate == 24 ? 'selected' : '' }}>1 day</option>
+                            <option value="48" {{ $startDate == 48 ? 'selected' : '' }}>2 days</option>
+                            <option value="168" {{ $startDate == 168 ? 'selected' : '' }}>7 days</option>
+                            <option value="720" {{ $startDate == 720 ? 'selected' : '' }}>30 days</option>
                         </select>
                         <button type="submit" class="btn btn-primary">Apply</button>
                     </form>
