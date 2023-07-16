@@ -65,7 +65,7 @@
                                 <tbody>
                                     @foreach ($lastCurrencies as $currency)
                                         <tr onclick="sendCurrency({{ $currency->id }})">
-                                            <td>${{ $currency->name }}</td>
+                                            <td>{{ $currency->name }}</td>
                                             <td>${{ number_format($currency->buy, 2) }}</td>
                                             <td>${{ number_format($currency->sell, 2) }}</td>
                                         </tr>
