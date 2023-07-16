@@ -46,9 +46,9 @@
                         @endphp
 
                         <div id="phpChartVariables" style="display: none;">
-                            <span id="labels">{!! $labels !!}</span>
-                            <span id="name">{!! $name !!}</span>
-                            <span id="data">{!! $data !!}</span>
+                            <a id="labels">{!! $labels !!}</a>
+                            <a id="name">{!! $name !!}</a>
+                            <a id="data">{!! $data !!}</a>
                         </div>
 
                         <!-- Add DataTable -->
@@ -95,8 +95,7 @@
 <script src="{{ mix('js/dashboard.js') }}" defer></script>
 
 <script>
-    function sendDateRange(dateRange)
-    {
+    function sendDateRange(dateRange) {
         var dataToSend = {
             newDateRange: dateRange
         };
@@ -111,12 +110,15 @@
             data: dataToSend,
             success: function(response) {
                 var serverVariable = response.serverVariable;
-                //селекторами изменить значения для чарта
-                //$('#labels').val(serverVariable.labels)
 
-                //Вызвать апдейт чарт
-                
-                console.log("Receive:", serverVariable);
+                // Изменить значения переменных labels name и data
+                $('#labels').text(JSON.stringify(serverVariable.labels));
+                $('#name').text(JSON.stringify(serverVariable.name));
+                $('#data').text(JSON.stringify(serverVariable.data));
+
+                // Вызвать обновление графика
+                console.log('ajax');
+                updateChart(serverVariable.labels, serverVariable.name, serverVariable.data);
             },
             error: function(xhr, status, error) {
                 console.error("Error:", error);
@@ -124,8 +126,7 @@
         });
     }
 
-    function sendCurrency(currencyId)
-    {
+    function sendCurrency(currencyId) {
         var dataToSend = {
             newCurrencyId: currencyId
         };
@@ -140,7 +141,14 @@
             data: dataToSend,
             success: function(response) {
                 var serverVariable = response.serverVariable;
-                console.log("Receive:",serverVariable);
+
+                // Изменить значения переменных labels name и data
+                $('#labels').text(JSON.stringify(serverVariable.labels));
+                $('#name').text(JSON.stringify(serverVariable.name));
+                $('#data').text(JSON.stringify(serverVariable.data));
+
+                // Вызвать обновление графика
+                updateChart(serverVariable.labels, serverVariable.name, serverVariable.data);
             },
             error: function(xhr, status, error) {
                 console.error("Error:", error);
