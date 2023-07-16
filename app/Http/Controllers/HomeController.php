@@ -94,9 +94,30 @@ class HomeController extends Controller
     {
         if (isset($_POST['newDateRange'])) {
             $startDate = $_POST['newDateRange'];
+
+            $this->session->put('startDate', $startDate);
             //передать новые данные для чарта с учетом нового времени
-            $serverVariable = "SERVER_VAR " . $startDate;
-            echo json_encode($serverVariable);
+            $user = auth()->user();
+
+            $selectedCurrencies = $this->userService->getUserCurrencies($user);
+
+            $choosenID = $this->session->get('choosenID', $selectedCurrencies->first());
+
+            $dayCurrencies = $this->currencyHistoryService->getHourCurrencies($selectedCurrencies, $startDate);
+
+            $labels = $dayCurrencies->where('id', $choosenID)->pluck('updated_at');
+
+            $data = $dayCurrencies->where('id', $choosenID)->pluck('sell');
+
+            $name = $dayCurrencies->where('id', $choosenID)->unique('name')->pluck('name');
+
+            $serverVariable = [
+
+                'labels' => $labels,
+                'name' => $name,
+                'data' => $data,
+            ];
+            return response()->json(['serverVariable' => $serverVariable]);
         }
     }
 
@@ -104,9 +125,29 @@ class HomeController extends Controller
     {
         if (isset($_POST['newCurrencyId'])) {
             $choosenID = $_POST['newCurrencyId'];
+            $this->session->put('choosenID', $choosenID);
             //передать новые данные для чарта с учетом новго айди
-            $serverVariable = "SERVER_VAR " . $choosenID;
-            echo json_encode($serverVariable);
+            $user = auth()->user();
+            $startDate = $this->session->get('startDate', 48);
+
+            $selectedCurrencies = $this->userService->getUserCurrencies($user);
+
+            $dayCurrencies = $this->currencyHistoryService->getHourCurrencies($selectedCurrencies, $startDate);
+
+            $labels = $dayCurrencies->where('id', $choosenID)->pluck('updated_at');
+
+            $data = $dayCurrencies->where('id', $choosenID)->pluck('sell');
+
+            $name = $dayCurrencies->where('id', $choosenID)->unique('name')->pluck('name');
+
+            $serverVariable = [
+
+                'labels' => $labels,
+                'name' => $name,
+                'data' => $data,
+            ];
+            //а передача то работает
+            return response()->json(['serverVariable' => $serverVariable]);
         }
     }
 
