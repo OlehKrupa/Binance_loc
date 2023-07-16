@@ -90,6 +90,26 @@ class HomeController extends Controller
             ->with('name', $name);
     }
 
+    public function getDateRange(Request $request)
+    {
+        if (isset($_POST['newDateRange'])) {
+            $startDate = $_POST['newDateRange'];
+            //передать новые данные для чарта с учетом нового времени
+            $serverVariable = "SERVER_VAR " . $startDate;
+            echo json_encode($serverVariable);
+        }
+    }
+
+    public function getCurrencyId(Request $request)
+    {
+        if (isset($_POST['newCurrencyId'])) {
+            $choosenID = $_POST['newCurrencyId'];
+            //передать новые данные для чарта с учетом новго айди
+            $serverVariable = "SERVER_VAR " . $choosenID;
+            echo json_encode($serverVariable);
+        }
+    }
+
     public function filtered(HomeFilterRequest $request)
     {
         // Get current user
