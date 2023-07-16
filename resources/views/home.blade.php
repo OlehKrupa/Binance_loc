@@ -30,7 +30,7 @@
                         <form id="updateChartForm" action="{{ route('home.filtered') }}" method="POST">
                             @csrf
                             <label for="dateRangeSelect">Select Date Range:</label>
-                            <select id="dateRangeSelect" name="dateRange">
+                            <select id="dateRangeSelect" name="dateRange" onchange="sendDateRange(value);">
                                 <option value="6" {{ $startDate == 6 ? 'selected' : '' }}>6 hours</option>
                                 <option value="12" {{ $startDate == 12 ? 'selected' : '' }}>12 hours</option>
                                 <option value="24" {{ $startDate == 24 ? 'selected' : '' }}>1 day</option>
@@ -64,7 +64,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($lastCurrencies as $currency)
-                                        <tr onclick="submitForm({{ $currency->id }})">
+                                        <tr onclick="sendCurrency({{ $currency->id }})">
                                             <td>${{ $currency->name }}</td>
                                             <td>${{ number_format($currency->buy, 2) }}</td>
                                             <td>${{ number_format($currency->sell, 2) }}</td>
@@ -93,3 +93,58 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 <script src="{{ mix('js/dashboard.js') }}" defer></script>
+
+<script>
+    function sendDateRange(dateRange)
+    {
+        var dataToSend = {
+            newDateRange: dateRange
+        };
+
+        console.log("SelectedDateRange " + dateRange);
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: "/home/sendDateRange",
+            type: "POST",
+            data: dataToSend,
+            success: function(response) {
+                var serverVariable = response.serverVariable;
+                //селекторами изменить значения для чарта
+                //$('#labels').val(serverVariable.labels)
+
+                //Вызвать апдейт чарт
+                
+                console.log("Receive:", serverVariable);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+
+    function sendCurrency(currencyId)
+    {
+        var dataToSend = {
+            newCurrencyId: currencyId
+        };
+
+        console.log("SelectedCurrency " + currencyId);
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: "/home/sendCurrency",
+            type: "POST",
+            data: dataToSend,
+            success: function(response) {
+                var serverVariable = response.serverVariable;
+                console.log("Receive:",serverVariable);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+</script>
