@@ -94,9 +94,8 @@ class HomeController extends Controller
     {
         if (isset($_POST['newDateRange'])) {
             $startDate = $_POST['newDateRange'];
-
             $this->session->put('startDate', $startDate);
-            //передать новые данные для чарта с учетом нового времени
+            
             $user = auth()->user();
 
             $selectedCurrencies = $this->userService->getUserCurrencies($user);
@@ -126,8 +125,9 @@ class HomeController extends Controller
         if (isset($_POST['newCurrencyId'])) {
             $choosenID = $_POST['newCurrencyId'];
             $this->session->put('choosenID', $choosenID);
-            //передать новые данные для чарта с учетом новго айди
+            
             $user = auth()->user();
+
             $startDate = $this->session->get('startDate', 48);
 
             $selectedCurrencies = $this->userService->getUserCurrencies($user);
