@@ -29,18 +29,23 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Trend</th>
                                     <th>★</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($currencies as $key => $currency)
+                                @foreach ($prices as $key => $currency)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>{{ $currency->name }}</td>
+                                    <td>{{ $currency['name'] }}</td>
+                                    <td>$ {{ number_format($currency['sell'],2); }}</td>
+                                    <td>{{ number_format($trends[$currency->id]['trend'],2); }} %</td>
                                     <td><input type="checkbox" name="selectedCurrencies[]" value="{{ $currency->id }}" {{ in_array($currency->id, $selectedCurrencies->toArray()) ? 'checked' : '' }}></td>
                                 </tr>
                                 @endforeach
                             </tbody>
+                            
                         </table>
                     </div>
                     <div class="card-footer">
@@ -58,3 +63,14 @@
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 
 <script src="{{ mix('js/preferences.js') }}" defer></script>
+
+<script>
+    $(document).ready(function() {
+        $('#currencyTable').DataTable({
+            scrollY: '600px',
+            scrollCollapse: true,
+            paging: false,
+            dom: 'f t'
+        });
+    });
+</script>
