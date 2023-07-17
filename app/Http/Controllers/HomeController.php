@@ -72,8 +72,6 @@ class HomeController extends Controller
         // Get day currencies
         $dayCurrencies = $this->currencyHistoryService->getHourCurrencies($selectedCurrencies, $startDate);
 
-        $lastCurrencies = $dayCurrencies->reverse()->unique('name');
-
         $labels = $dayCurrencies->where('id', $choosenID)->pluck('updated_at');
 
         $data = $dayCurrencies->where('id', $choosenID)->pluck('sell');
@@ -84,7 +82,6 @@ class HomeController extends Controller
             ->with('dayCurrencies', $dayCurrencies)
             ->with('startDate', $startDate)
             ->with('choosenID', $choosenID)
-            ->with('lastCurrencies', $lastCurrencies)
             ->with('labels', $labels)
             ->with('data', $data)
             ->with('name', $name);
