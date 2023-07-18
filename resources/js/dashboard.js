@@ -46,6 +46,16 @@ $(document).ready(function () {
     };
 
     myChart = new Chart(ctx, config);
+
+    $('#dateRangeSelect').on('change', function () {
+        var dateRange = $(this).val();
+        sendDateRange(dateRange);
+    });
+
+    $('#currencyTable tbody').on('click', 'tr', function () {
+        var currencyId = $(this).data('currencyid');
+        sendCurrency(currencyId);
+    });
 });
 
 function formatDate(date) {
@@ -125,12 +135,7 @@ function sendCurrency(currencyId) {
     });
 }
 
-function submitForm(currencyId) {
-    document.getElementById('currencyIdInput').value = currencyId;
-    document.getElementById('updateChartCurrency').submit();
-}
-
-function highlightRow(currencyId) {
+export function highlightRow(currencyId) {
     $('#currencyTable tbody tr').removeClass('table-primary'); // Удаляем класс highlight у всех строк таблицы
     $('#currencyTable tbody tr[data-currencyid="' + currencyId + '"]').addClass(
         'table-primary'); // Добавляем класс highlight выбранной строке

@@ -27,7 +27,7 @@
 
                         <!-- Add choose days -->
                         <label for="dateRangeSelect">Select Date Range:</label>
-                        <select id="dateRangeSelect" name="dateRange" onchange="sendDateRange(value);">
+                        <select id="dateRangeSelect" name="dateRange">
                             <option value="6" {{ $startDate == 6 ? 'selected' : '' }}>6 hours</option>
                             <option value="12" {{ $startDate == 12 ? 'selected' : '' }}>12 hours</option>
                             <option value="24" {{ $startDate == 24 ? 'selected' : '' }}>1 day</option>
@@ -59,8 +59,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($lastCurrencies as $currency)
-                                        <tr data-currencyid="{{ $currency->id }}"
-                                            onclick="sendCurrency({{ $currency->id }})">
+                                        <tr data-currencyid="{{ $currency->id }}">
                                             <td>{{ $currency->name }}</td>
                                             <td>${{ number_format($currency->buy, 2) }}</td>
                                             <td>${{ number_format($currency->sell, 2) }}</td>

@@ -1,8 +1,46 @@
 /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	// The require scope
+/******/ 	var __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
 var __webpack_exports__ = {};
 /*!***********************************!*\
   !*** ./resources/js/dashboard.js ***!
   \***********************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   highlightRow: () => (/* binding */ highlightRow)
+/* harmony export */ });
 var myChart;
 $(document).ready(function () {
   $('#currencyTable').DataTable({
@@ -45,6 +83,14 @@ $(document).ready(function () {
     }
   };
   myChart = new Chart(ctx, config);
+  $('#dateRangeSelect').on('change', function () {
+    var dateRange = $(this).val();
+    sendDateRange(dateRange);
+  });
+  $('#currencyTable tbody').on('click', 'tr', function () {
+    var currencyId = $(this).data('currencyid');
+    sendCurrency(currencyId);
+  });
 });
 function formatDate(date) {
   var options = {
@@ -115,10 +161,6 @@ function sendCurrency(currencyId) {
       console.error("Error:", _error2);
     }
   });
-}
-function submitForm(currencyId) {
-  document.getElementById('currencyIdInput').value = currencyId;
-  document.getElementById('updateChartCurrency').submit();
 }
 function highlightRow(currencyId) {
   $('#currencyTable tbody tr').removeClass('table-primary'); // Удаляем класс highlight у всех строк таблицы
