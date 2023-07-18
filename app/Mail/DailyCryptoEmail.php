@@ -26,4 +26,11 @@ class DailyCryptoEmail extends Mailable
     {
         return $this->view('emails.daily_crypto')->subject('Daily Crypto Report');
     }
+
+    public function toHtml()
+    {
+        $htmlContent = $this->view('emails.daily_crypto')->render();
+
+        return $htmlContent;
+    }
 }
