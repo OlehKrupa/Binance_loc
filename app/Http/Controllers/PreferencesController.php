@@ -3,17 +3,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\CurrencyService;
+use App\Services\CurrencyHistoryService;
 use App\Services\UserService;
 use App\Http\Requests\PreferencesUpdateRequest;
 
 class PreferencesController extends Controller
 {
     private $currencyService;
+    private $currencyHistoryService;
     private $userService;
 
-    public function __construct(CurrencyService $currencyService, UserService $userService)
+    public function __construct(CurrencyService $currencyService, CurrencyHistoryService $currencyHistoryService, UserService $userService)
     {
         $this->currencyService = $currencyService;
+        $this->currencyHistoryService = $currencyHistoryService;
         $this->userService = $userService;
     }
 
@@ -21,14 +24,22 @@ class PreferencesController extends Controller
     {
         $currencies = $this->currencyService->all();
 
-        // Get the current user
-        $user = auth()->user();
+        $currenciesId = $currencies->pluck('id');
 
-        // Get the currencies selected by the user
+        $user = auth()->user();
+        
+        $prices = $this->currencyHistoryService->getHourCurrencies($currenciesId, 24)->unique();
+        
+        $trends = $this->currencyHistoryService->analyzeCurrencyTrend($currenciesId);
+
         $selectedCurrencies = $this->userService->getUserCurrencies($user);
 
-        return view('preferences', compact('currencies', 'selectedCurrencies'));
+        return view('preferences')
+        ->with('prices', $prices)
+        ->with('trends', $trends)
+        ->with('selectedCurrencies' , $selectedCurrencies);
     }
+
 
     public function update(PreferencesUpdateRequest $request)
     {

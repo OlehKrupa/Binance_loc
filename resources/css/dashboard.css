@@ -1,0 +1,7 @@
+table.dataTable tbody tr:hover {
+    background-color: #D8F2FF !important;
+}
+
+.dataTables_wrapper .dataTables_scrollBody table.dataTable tbody tr {
+    border-bottom: 1px solid #ccc;
+}

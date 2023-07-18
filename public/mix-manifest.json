@@ -2,5 +2,7 @@
     "/js/app.js": "/js/app.js",
     "/js/dashboard.js": "/js/dashboard.js",
     "/js/preferences.js": "/js/preferences.js",
-    "/css/app.css": "/css/app.css"
+    "/css/app.css": "/css/app.css",
+    "/css/preferences.css": "/css/preferences.css",
+    "/css/dashboard.css": "/css/dashboard.css"
 }

@@ -56,14 +56,17 @@ class SendDailyCurrencyTelegram extends Command
      */
     public function handle()
     {
-        //Telegramm channel ID
+        // Get the Telegram channel ID and bot token from environment variables
         $idChannel = env('TELEGRAM_CHANNEL');
-        //Bot token
         $botToken = env('TELEGRAM_BOT_TOKEN');
 
+        // Get all currency IDs from the CurrencyService
         $selectedCurrencies = $this->currencyService->getAllCurrenciesId();
+
+        // Analyze the currency trend for the selected currencies using the CurrencyHistoryService
         $currenciesData = $this->currencyHistoryService->analyzeCurrencyTrend($selectedCurrencies);
 
+        // Prepare the message to be sent
         $message = "Currencies daily trends: ";
 
         foreach ($selectedCurrencies as $currencyId) {
@@ -74,16 +77,19 @@ class SendDailyCurrencyTelegram extends Command
             $message .= "\t";
             if ($currenciesData[$currencyId]["trend"] > 0) {
                 $message .= "↑";
-            } else
+            } else {
                 $message .= "↓";
+            }
         }
 
-        //encode to preserve line breaks
+        // Encode the message to preserve line breaks and special characters
         $message = urlencode($message);
-        //Try send
+
+        // Try to send the message to the Telegram channel
         try {
             file_get_contents("https://api.telegram.org/bot$botToken/sendMessage?chat_id=$idChannel&text=" . $message);
         } catch (\Exception $e) {
+            // Handle any exceptions that occur during the request
         }
     }
 }

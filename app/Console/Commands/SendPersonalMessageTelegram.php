@@ -47,6 +47,7 @@ class SendPersonalMessageTelegram extends Command
     /**
      * Create a new command instance.
      *
+     * @param UserService $userService
      * @param CurrencyService $currencyService
      * @param CurrencyHistoryService $currencyHistoryService
      */
@@ -66,16 +67,21 @@ class SendPersonalMessageTelegram extends Command
      */
     public function handle()
     {
+        // Get the users with Telegram IDs from the UserService
         $users = $this->userService->getUsersTelegramId();
 
+        // Get the Telegram bot token from environment variables
         $botToken = env('TELEGRAM_BOT_TOKEN');
 
         foreach ($users as $user) {
+            // Get the selected currencies for the user
             $selectedCurrencies = $user->currencies()->pluck('currency_id')->toArray();
+
+            // Analyze the currency trend for the selected currencies using the CurrencyHistoryService
             $currenciesData = $this->currencyHistoryService->analyzeCurrencyTrend($selectedCurrencies);
 
+            // Get the Telegram ID and construct the message
             $idChannel = $user['telegram_Id'];
-            
             $message = $user['first_name'] . " " . $user['last_name'] . " daily trends: ";
 
             foreach ($selectedCurrencies as $currencyId) {
@@ -86,16 +92,19 @@ class SendPersonalMessageTelegram extends Command
                 $message .= "\t";
                 if ($currenciesData[$currencyId]["trend"] > 0) {
                     $message .= "↑";
-                } else
+                } else {
                     $message .= "↓";
+                }
             }
 
-            //encode to preserve line breaks
+            // Encode the message to preserve line breaks and special characters
             $message = urlencode($message);
-            //Try send
+
+            // Try to send the message to the user's Telegram channel
             try {
                 file_get_contents("https://api.telegram.org/bot$botToken/sendMessage?chat_id=$idChannel&text=" . $message);
             } catch (\Exception $e) {
+                // Handle any exceptions that occur during the request
             }
         }
 

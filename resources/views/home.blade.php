@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -27,28 +26,24 @@
                         </div>
 
                         <!-- Add choose days -->
-                        <form id="updateChartForm" action="{{ route('home.filtered') }}" method="POST">
-                            @csrf
-                            <label for="dateRangeSelect">Select Date Range:</label>
-                            <select id="dateRangeSelect" name="dateRange">
-                                <option value="6" {{ $startDate == 6 ? 'selected' : '' }}>6 hours</option>
-                                <option value="12" {{ $startDate == 12 ? 'selected' : '' }}>12 hours</option>
-                                <option value="24" {{ $startDate == 24 ? 'selected' : '' }}>1 day</option>
-                                <option value="48" {{ $startDate == 48 ? 'selected' : '' }}>2 days</option>
-                                <option value="168" {{ $startDate == 168 ? 'selected' : '' }}>7 days</option>
-                                <option value="720" {{ $startDate == 720 ? 'selected' : '' }}>30 days</option>
-                            </select>
-                            <button type="submit" class="btn btn-primary">Apply</button>
-                        </form>
+                        <label for="dateRangeSelect">Select Date Range:</label>
+                        <select id="dateRangeSelect" name="dateRange">
+                            <option value="6" {{ $startDate == 6 ? 'selected' : '' }}>6 hours</option>
+                            <option value="12" {{ $startDate == 12 ? 'selected' : '' }}>12 hours</option>
+                            <option value="24" {{ $startDate == 24 ? 'selected' : '' }}>1 day</option>
+                            <option value="48" {{ $startDate == 48 ? 'selected' : '' }}>2 days</option>
+                            <option value="168" {{ $startDate == 168 ? 'selected' : '' }}>7 days</option>
+                            <option value="720" {{ $startDate == 720 ? 'selected' : '' }}>30 days</option>
+                        </select>
 
                         @php
                             $lastCurrencies = $dayCurrencies->reverse()->unique('name');
                         @endphp
 
                         <div id="phpChartVariables" style="display: none;">
-                            <span id="labels">{!! $labels !!}</span>
-                            <span id="name">{!! $name !!}</span>
-                            <span id="data">{!! $data !!}</span>
+                            <a id="labels">{!! $labels !!}</a>
+                            <a id="name">{!! $name !!}</a>
+                            <a id="data">{!! $data !!}</a>
                         </div>
 
                         <!-- Add DataTable -->
@@ -64,8 +59,8 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($lastCurrencies as $currency)
-                                        <tr onclick="submitForm({{ $currency->id }})">
-                                            <td>${{ $currency->name }}</td>
+                                        <tr data-currencyid="{{ $currency->id }}">
+                                            <td>{{ $currency->name }}</td>
                                             <td>${{ number_format($currency->buy, 2) }}</td>
                                             <td>${{ number_format($currency->sell, 2) }}</td>
                                         </tr>
@@ -81,15 +76,10 @@
     </div>
 @endsection
 
-<script>
-    function submitForm(currencyId) {
-        document.getElementById('currencyIdInput').value = currencyId;
-        document.getElementById('updateChartCurrency').submit();
-    }
-</script>
-
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+
 <script src="{{ mix('js/dashboard.js') }}" defer></script>
+<link href="{{ mix('css/dashboard.css') }}" rel="stylesheet">

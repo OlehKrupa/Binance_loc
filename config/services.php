@@ -45,8 +45,8 @@ return [
         'BCH', 'BSV', 'BTC', 'COMP', 'CRO',
         'DAI', 'DOGE', 'DOT', 'EGLD', 'EOS',
         'ETC', 'ETH', 'FIL', 'LINK', 'LTC',
-        'MATIC', 'MKR', 'SUSHI', 'UMA', 'WBTC',
-        'XLM', 'XTZ', 'YFI', 'ZEC',
+        'MATIC', 'MKR', 'WBTC',
+        'XLM',
     ],
 
     /*

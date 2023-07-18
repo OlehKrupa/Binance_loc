@@ -23,8 +23,6 @@ class CurrencyHistoryRepository extends BaseRepository
     {
         return CurrencyHistory::select('currency.id', 'currency.name', 'currency_history.sell', 'currency_history.buy', 'currency_history.created_at')
             ->join('currency', 'currency_history.currency_id', '=', 'currency.id')
-            ->join('user_currency', 'currency.id', '=', 'user_currency.currency_id')
-            ->join('users', 'user_currency.user_id', '=', 'users.id')
             ->whereIn('currency.id', $selectedCurrencies)
             ->latest('currency_history.created_at')
             ->distinct()
@@ -37,10 +35,8 @@ class CurrencyHistoryRepository extends BaseRepository
         $startDateTime = Carbon::now()->subHours($hours);
         $endDateTime = Carbon::now();
 
-        return CurrencyHistory::select('currency.id', 'currency.name', 'currency_history.sell', 'currency_history.buy', 'currency_history.updated_at')
+        return CurrencyHistory::select('currency.id', 'currency.name', 'currency.full_name', 'currency.image_url' , 'currency_history.sell', 'currency_history.buy', 'currency_history.updated_at')
             ->join('currency', 'currency_history.currency_id', '=', 'currency.id')
-            ->join('user_currency', 'currency.id', '=', 'user_currency.currency_id')
-            ->join('users', 'user_currency.user_id', '=', 'users.id')
             ->whereIn('currency.id', $selectedCurrencies)
             ->whereBetween('currency_history.created_at', [$startDateTime, $endDateTime])
             ->distinct()

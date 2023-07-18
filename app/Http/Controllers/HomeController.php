@@ -7,6 +7,7 @@ use Illuminate\Session\Store;
 use App\Http\Requests\HomeFilterRequest;
 use App\Services\UserService;
 use App\Services\CurrencyHistoryService;
+use Illuminate\Support\Facades\Http;
 
 class HomeController extends Controller
 {
@@ -72,8 +73,6 @@ class HomeController extends Controller
         // Get day currencies
         $dayCurrencies = $this->currencyHistoryService->getHourCurrencies($selectedCurrencies, $startDate);
 
-        $lastCurrencies = $dayCurrencies->reverse()->unique('name');
-
         $labels = $dayCurrencies->where('id', $choosenID)->pluck('updated_at');
 
         $data = $dayCurrencies->where('id', $choosenID)->pluck('sell');
@@ -84,10 +83,70 @@ class HomeController extends Controller
             ->with('dayCurrencies', $dayCurrencies)
             ->with('startDate', $startDate)
             ->with('choosenID', $choosenID)
-            ->with('lastCurrencies', $lastCurrencies)
             ->with('labels', $labels)
             ->with('data', $data)
             ->with('name', $name);
+    }
+
+    public function getDateRange(Request $request)
+    {
+        if (isset($_POST['newDateRange'])) {
+            $startDate = $_POST['newDateRange'];
+            $this->session->put('startDate', $startDate);
+
+            $user = auth()->user();
+
+            $selectedCurrencies = $this->userService->getUserCurrencies($user);
+
+            $choosenID = $this->session->get('choosenID', $selectedCurrencies->first());
+
+            $dayCurrencies = $this->currencyHistoryService->getHourCurrencies($selectedCurrencies, $startDate);
+
+            $labels = $dayCurrencies->where('id', $choosenID)->pluck('updated_at');
+
+            $data = $dayCurrencies->where('id', $choosenID)->pluck('sell');
+
+            $name = $dayCurrencies->where('id', $choosenID)->unique('name')->pluck('name');
+
+            $serverVariable = [
+
+                'labels' => $labels,
+                'name' => $name,
+                'data' => $data,
+            ];
+            return response()->json(['serverVariable' => $serverVariable]);
+        }
+    }
+
+    public function getCurrencyId(Request $request)
+    {
+        if (isset($_POST['newCurrencyId'])) {
+            $choosenID = $_POST['newCurrencyId'];
+            $this->session->put('choosenID', $choosenID);
+
+            $user = auth()->user();
+
+            $startDate = $this->session->get('startDate', 48);
+
+            $selectedCurrencies = $this->userService->getUserCurrencies($user);
+
+            $dayCurrencies = $this->currencyHistoryService->getHourCurrencies($selectedCurrencies, $startDate);
+
+            $labels = $dayCurrencies->where('id', $choosenID)->pluck('updated_at');
+
+            $data = $dayCurrencies->where('id', $choosenID)->pluck('sell');
+
+            $name = $dayCurrencies->where('id', $choosenID)->unique('name')->pluck('name');
+
+            $serverVariable = [
+
+                'labels' => $labels,
+                'name' => $name,
+                'data' => $data,
+            ];
+            //а передача то работает
+            return response()->json(['serverVariable' => $serverVariable]);
+        }
     }
 
     public function filtered(HomeFilterRequest $request)
@@ -109,5 +168,10 @@ class HomeController extends Controller
             $this->session->put('choosenID', $choosenID);
         }
         return $this->index();
+    }
+
+    public function Test()
+    {
+        dd('test');
     }
 }

@@ -22,8 +22,10 @@ Route::get('/preferences',[App\Http\Controllers\PreferencesController::class,'in
 Route::post('/preferences/update', [App\Http\Controllers\PreferencesController::class, 'update'])->name('preferences.update');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware('checkCryptocurrencyCount')->name('home');
+Route::get('/test', [App\Http\Controllers\HomeController::class, 'test'])->name('test');
 Route::post('/home', [App\Http\Controllers\HomeController::class, 'filtered'])->middleware('checkCryptocurrencyCount')->name('home.filtered');
-Route::post('/home/test', [App\Http\Controllers\HomeController::class, 'test'])->name('home.test');
+Route::post('/home/sendDateRange', [App\Http\Controllers\HomeController::class, 'getDateRange'])->name('home.sendDateRange');
+Route::post('/home/sendCurrency', [App\Http\Controllers\HomeController::class, 'getCurrencyId'])->name('home.sendCurrency');
 
 Auth::routes();
 
