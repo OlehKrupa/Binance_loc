@@ -4,12 +4,8 @@ namespace App\Console\Commands;
 
 use App\Jobs\Mailer;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\DailyCryptoEmail;
 use App\Services\UserService;
-use App\Services\CurrencyService;
 use App\Services\CurrencyHistoryService;
-use Illuminate\Support\Carbon;
 
 class SendDailyCurrencyEmail extends Command
 {
@@ -61,12 +57,17 @@ class SendDailyCurrencyEmail extends Command
      */
     public function handle()
     {
+        // Get the subscribed users from the UserService
         $users = $this->userService->getSubscribedUsers();
 
         foreach ($users as $user) {
+            // Get the selected currencies for the user
             $selectedCurrencies = $user->currencies()->pluck('currency_id')->toArray();
+
+            // Analyze the currency trend for the selected currencies using the CurrencyHistoryService
             $currenciesData = $this->currencyHistoryService->analyzeCurrencyTrend($selectedCurrencies);
 
+            // Dispatch the Mailer job to send the email to the user
             Mailer::dispatch($user, $currenciesData, $selectedCurrencies)->delay(now()->addSeconds(2));
         }
 

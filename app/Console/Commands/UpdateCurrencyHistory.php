@@ -5,8 +5,6 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Services\CurrencyService;
 use App\Services\CurrencyHistoryService;
-use Illuminate\Support\Facades\App;
-
 
 class UpdateCurrencyHistory extends Command
 {
@@ -59,27 +57,34 @@ class UpdateCurrencyHistory extends Command
      */
     public function handle()
     {
+        // Get all currencies from the CurrencyService
         $currencies = $this->currencyService->all();
 
         foreach ($currencies as $currency) {
             $currencyCode = $currency->name;
 
+            // Construct the buy and sell URLs using the Coinbase API URL and currency code
             $buyUrl = env('COINBASE_API_URL') . "{$currencyCode}-USD/buy";
             $sellUrl = env('COINBASE_API_URL') . "{$currencyCode}-USD/sell";
 
-            //$buyUrl = "https://api.coinbase.com/v2/prices/{$currencyCode}-USD/buy";
-            //$sellUrl = "https://api.coinbase.com/v2/prices/{$currencyCode}-USD/sell";
-
+            // Fetch the buy and sell prices using the fetchPrice function
             $buyPrice = $this->fetchPrice($buyUrl);
             $sellPrice = $this->fetchPrice($sellUrl);
             $currencyId = $currency->id;
 
+            // Create the currency history entry using the CurrencyHistoryService
             $currencyHistory = $this->currencyHistoryService->createCurrencyHistory($currencyId, $sellPrice, $buyPrice);
         }
 
         $this->info('Currency history updated successfully!');
     }
 
+    /**
+     * Fetches the price from the given URL using cURL.
+     *
+     * @param string $url
+     * @return float
+     */
     private function fetchPrice($url)
     {
         $ch = curl_init($url);

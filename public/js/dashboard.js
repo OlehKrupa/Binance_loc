@@ -43,6 +43,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 var myChart;
 $(document).ready(function () {
+  // Initialize DataTable for currencyTable
   $('#currencyTable').DataTable({
     paging: false,
     searching: false,
@@ -50,20 +51,28 @@ $(document).ready(function () {
       info: "Select a cryptocurrency to display the chart"
     }
   });
+
+  // Highlight the selected row on page load
   highlightRow("{{ $choosenID }}");
 
-  //Костиль? сесія працює для айдішника, не праюцє для дати
+  // Store the selected date range in local storage
   var selectedDateRange = localStorage.getItem('selectedDateRange');
   if (selectedDateRange) {
     $('#dateRangeSelect').val(selectedDateRange);
   }
+
+  // Get chart data from HTML spans
   var labelsSpan = document.getElementById('labels');
   var nameSpan = document.getElementById('name');
   var dataSpan = document.getElementById('data');
   var ctx = document.getElementById('myChart').getContext('2d');
+
+  // Parse the chart data from the spans
   var labels = JSON.parse(labelsSpan.textContent);
   var name = JSON.parse(nameSpan.textContent);
   var data = JSON.parse(dataSpan.textContent);
+
+  // Configure the chart
   var config = {
     type: 'line',
     data: {
@@ -82,16 +91,24 @@ $(document).ready(function () {
       }
     }
   };
+
+  // Create the chart
   myChart = new Chart(ctx, config);
+
+  // Event handler for date range select change
   $('#dateRangeSelect').on('change', function () {
     var dateRange = $(this).val();
     sendDateRange(dateRange);
   });
+
+  // Event handler for clicking on a table row
   $('#currencyTable tbody').on('click', 'tr', function () {
     var currencyId = $(this).data('currencyid');
     sendCurrency(currencyId);
   });
 });
+
+// Format a date to a custom string format
 function formatDate(date) {
   var options = {
     year: '2-digit',
@@ -102,6 +119,8 @@ function formatDate(date) {
   };
   return date.toLocaleDateString('en-GB', options).replace(',', '');
 }
+
+// Send the selected date range to the server
 function sendDateRange(dateRange) {
   localStorage.setItem('selectedDateRange', dateRange);
   var dataToSend = {
@@ -115,10 +134,10 @@ function sendDateRange(dateRange) {
     type: "POST",
     data: dataToSend,
     success: function success(response) {
+      // Update the chart data
       $('#labels').text(JSON.stringify(response.serverVariable.labels));
       $('#name').text(JSON.stringify(response.serverVariable.name));
       $('#data').text(JSON.stringify(response.serverVariable.data));
-      var ctx = $('myChart');
       myChart.data.labels = response.serverVariable.labels.map(function (label) {
         var date = new Date(label);
         return formatDate(date);
@@ -132,6 +151,8 @@ function sendDateRange(dateRange) {
     }
   });
 }
+
+// Send the selected currency to the server
 function sendCurrency(currencyId) {
   var dataToSend = {
     newCurrencyId: currencyId
@@ -144,11 +165,11 @@ function sendCurrency(currencyId) {
     type: "POST",
     data: dataToSend,
     success: function success(response) {
+      // Highlight the selected row and update the chart data
       highlightRow(currencyId);
       $('#labels').text(JSON.stringify(response.serverVariable.labels));
       $('#name').text(JSON.stringify(response.serverVariable.name));
       $('#data').text(JSON.stringify(response.serverVariable.data));
-      var ctx = $('myChart');
       myChart.data.labels = response.serverVariable.labels.map(function (label) {
         var date = new Date(label);
         return formatDate(date);
@@ -162,9 +183,11 @@ function sendCurrency(currencyId) {
     }
   });
 }
+
+// Function to highlight the selected row in the DataTable
 function highlightRow(currencyId) {
-  $('#currencyTable tbody tr').removeClass('table-primary'); // Удаляем класс highlight у всех строк таблицы
-  $('#currencyTable tbody tr[data-currencyid="' + currencyId + '"]').addClass('table-primary'); // Добавляем класс highlight выбранной строке
+  $('#currencyTable tbody tr').removeClass('table-primary'); // Remove highlight class from all table rows
+  $('#currencyTable tbody tr[data-currencyid="' + currencyId + '"]').addClass('table-primary'); // Add highlight class to the selected row
 }
 /******/ })()
 ;
