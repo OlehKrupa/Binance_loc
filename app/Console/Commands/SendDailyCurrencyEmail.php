@@ -72,5 +72,4 @@ class SendDailyCurrencyEmail extends Command
 
         $this->info('Daily crypto emails sent successfully.');
     }
-
 }
