@@ -1,69 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <style>
-        table.dataTable tbody tr:hover {
-            background-color: #D8F2FF !important;
-        }
-
-        .checkbox-container {
-            display: block;
-            position: relative;
-            padding-left: 25px;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .checkbox-container input {
-            position: absolute;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .checkmark {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            height: 20px;
-            width: 20px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            cursor: pointer;
-        }
-
-        .checkbox-container:hover input~.checkmark {
-            background-color: #e6e6e6;
-        }
-
-        .checkbox-container input:checked~.checkmark {
-            background-color: #2196F3;
-        }
-
-        .checkmark:after {
-            content: "";
-            position: absolute;
-            display: none;
-        }
-
-        .checkbox-container input:checked~.checkmark:after {
-            display: block;
-        }
-
-        .positive-trend {
-            color: green;
-            font-weight: bold;
-        }
-
-        .negative-trend {
-            color: red;
-            font-weight: bold;
-        }
-
-        .dataTables_wrapper .dataTables_scrollBody table.dataTable tbody tr {
-            border-bottom: 1px solid #ccc;
-        }
-    </style>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -139,25 +76,4 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
 
 <script src="{{ mix('js/preferences.js') }}" defer></script>
-
-<script>
-    $(document).ready(function() {
-        $('#currencyTable').on('click', '.checkmark', function(e) {
-            e.stopPropagation();
-            const checkbox = $(this).siblings('input[type="checkbox"]');
-            checkbox.prop('checked', !checkbox.prop('checked'));
-        });
-
-        $('#currencyTable').on('click', 'tr', function(e) {
-            const checkbox = $(this).find('input[type="checkbox"]');
-            checkbox.prop('checked', !checkbox.prop('checked'));
-        });
-
-        $('#currencyTable').DataTable({
-            scrollY: '600px',
-            scrollCollapse: true,
-            paging: false,
-            dom: 'lfrt'
-        });
-    });
-</script>
+<link href="{{ mix('css/preferences.css') }}" rel="stylesheet">
