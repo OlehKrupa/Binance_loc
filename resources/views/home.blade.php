@@ -1,6 +1,14 @@
 @extends('layouts.app')
 @section('content')
+    <style>
+        table.dataTable tbody tr:hover {
+            background-color: #D8F2FF !important;
+        }
 
+        .dataTables_wrapper .dataTables_scrollBody table.dataTable tbody tr {
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -80,8 +88,8 @@
 
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
 <script src="{{ mix('js/dashboard.js') }}" defer></script>
 
 <script>
@@ -218,8 +226,8 @@
     }
 
     function highlightRow(currencyId) {
-        $('#currencyTable tbody tr').removeClass('table-success'); // Удаляем класс highlight у всех строк таблицы
+        $('#currencyTable tbody tr').removeClass('table-primary'); // Удаляем класс highlight у всех строк таблицы
         $('#currencyTable tbody tr[data-currencyid="' + currencyId + '"]').addClass(
-            'table-success'); // Добавляем класс highlight выбранной строке
+            'table-primary'); // Добавляем класс highlight выбранной строке
     }
 </script>

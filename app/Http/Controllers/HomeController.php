@@ -7,6 +7,7 @@ use Illuminate\Session\Store;
 use App\Http\Requests\HomeFilterRequest;
 use App\Services\UserService;
 use App\Services\CurrencyHistoryService;
+use Illuminate\Support\Facades\Http;
 
 class HomeController extends Controller
 {
@@ -92,7 +93,7 @@ class HomeController extends Controller
         if (isset($_POST['newDateRange'])) {
             $startDate = $_POST['newDateRange'];
             $this->session->put('startDate', $startDate);
-            
+
             $user = auth()->user();
 
             $selectedCurrencies = $this->userService->getUserCurrencies($user);
@@ -122,7 +123,7 @@ class HomeController extends Controller
         if (isset($_POST['newCurrencyId'])) {
             $choosenID = $_POST['newCurrencyId'];
             $this->session->put('choosenID', $choosenID);
-            
+
             $user = auth()->user();
 
             $startDate = $this->session->get('startDate', 48);
@@ -167,5 +168,10 @@ class HomeController extends Controller
             $this->session->put('choosenID', $choosenID);
         }
         return $this->index();
+    }
+
+    public function Test()
+    {
+        dd('test');
     }
 }

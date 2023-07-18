@@ -40,6 +40,7 @@ class PreferencesController extends Controller
         ->with('selectedCurrencies' , $selectedCurrencies);
     }
 
+
     public function update(PreferencesUpdateRequest $request)
     {
         // Get the selected cryptocurrencies from the request

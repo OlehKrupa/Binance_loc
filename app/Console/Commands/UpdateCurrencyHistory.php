@@ -7,6 +7,7 @@ use App\Services\CurrencyService;
 use App\Services\CurrencyHistoryService;
 use Illuminate\Support\Facades\App;
 
+
 class UpdateCurrencyHistory extends Command
 {
     /**

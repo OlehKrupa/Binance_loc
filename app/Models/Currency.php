@@ -14,6 +14,9 @@ class Currency extends Model
 
     protected $fillable = [
         'name',
+        'full_name',
+        'image',
+        'image_url',
     ];
 
     protected $casts = [
