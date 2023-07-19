@@ -30,26 +30,6 @@ Route::middleware('checkCryptocurrencyCount')->group(function () {
 Route::get('/preferences', [PreferencesController::class, 'index'])->name('preferences');
 Route::post('/preferences/update', [PreferencesController::class, 'update'])->name('preferences.update');
 
-Route::get('/test', [HomeController::class, 'test'])->name('test');
-
-Route::get('/telegram', function (Telegram $telegram) {
-    $buttons = [
-        'inline_keyboard' => [
-            [
-                [
-                    'text' => 'subscribe',
-                    'callback_data' => '1'
-                ],
-                [
-                    'text' => 'unsubscribe',
-                    'callback_data' => '2'
-                ],
-            ]
-        ]
-    ];
-    $sendMessage = $telegram->sendButtons(337612279, 'Cryptocurrencies distribution in telegram', json_encode($buttons));
-});
-
 Route::get('/clear', function () {
     Artisan::call('cache:clear');
     Artisan::call('config:cache');
