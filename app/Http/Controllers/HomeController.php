@@ -64,7 +64,7 @@ class HomeController extends Controller
         // Get start day from session or use default value (48)
         $startDate = $this->session->get('startDate', 48);
 
-        // Get selected user currencies 
+        // Get selected user currencies
         $selectedCurrencies = $this->userService->getUserCurrencies($user);
 
         // Get chosen currency from session or use default value (first currency)
@@ -73,12 +73,12 @@ class HomeController extends Controller
         // Get day currencies
         $dayCurrencies = $this->currencyHistoryService->getHourCurrencies($selectedCurrencies, $startDate);
 
+        // Extract labels, data, and name for the chosen currency
         $labels = $dayCurrencies->where('id', $choosenID)->pluck('updated_at');
-
         $data = $dayCurrencies->where('id', $choosenID)->pluck('sell');
-
         $name = $dayCurrencies->where('id', $choosenID)->unique('name')->pluck('name');
 
+        // Pass data to the 'home' view
         return view('home')
             ->with('dayCurrencies', $dayCurrencies)
             ->with('startDate', $startDate)
@@ -88,90 +88,50 @@ class HomeController extends Controller
             ->with('name', $name);
     }
 
-    public function getDateRange(Request $request)
-    {
-        if (isset($_POST['newDateRange'])) {
-            $startDate = $_POST['newDateRange'];
-            $this->session->put('startDate', $startDate);
-
-            $user = auth()->user();
-
-            $selectedCurrencies = $this->userService->getUserCurrencies($user);
-
-            $choosenID = $this->session->get('choosenID', $selectedCurrencies->first());
-
-            $dayCurrencies = $this->currencyHistoryService->getHourCurrencies($selectedCurrencies, $startDate);
-
-            $labels = $dayCurrencies->where('id', $choosenID)->pluck('updated_at');
-
-            $data = $dayCurrencies->where('id', $choosenID)->pluck('sell');
-
-            $name = $dayCurrencies->where('id', $choosenID)->unique('name')->pluck('name');
-
-            $serverVariable = [
-
-                'labels' => $labels,
-                'name' => $name,
-                'data' => $data,
-            ];
-            return response()->json(['serverVariable' => $serverVariable]);
-        }
-    }
-
-    public function getCurrencyId(Request $request)
-    {
-        if (isset($_POST['newCurrencyId'])) {
-            $choosenID = $_POST['newCurrencyId'];
-            $this->session->put('choosenID', $choosenID);
-
-            $user = auth()->user();
-
-            $startDate = $this->session->get('startDate', 48);
-
-            $selectedCurrencies = $this->userService->getUserCurrencies($user);
-
-            $dayCurrencies = $this->currencyHistoryService->getHourCurrencies($selectedCurrencies, $startDate);
-
-            $labels = $dayCurrencies->where('id', $choosenID)->pluck('updated_at');
-
-            $data = $dayCurrencies->where('id', $choosenID)->pluck('sell');
-
-            $name = $dayCurrencies->where('id', $choosenID)->unique('name')->pluck('name');
-
-            $serverVariable = [
-
-                'labels' => $labels,
-                'name' => $name,
-                'data' => $data,
-            ];
-            //а передача то работает
-            return response()->json(['serverVariable' => $serverVariable]);
-        }
-    }
-
+    /**
+     * Filter the currencies based on the user's selection.
+     *
+     * @param  \App\Http\Requests\HomeFilterRequest  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function filtered(HomeFilterRequest $request)
     {
         // Get current user
         $user = auth()->user();
 
-        // Update start day if provided in the request
-        if ($request->has('dateRange')) {
-            $startDate = $request->input('dateRange');
-            // Save the updated start day to session
+        // Update start date in session if newDateRange is present in the request
+        if ($request->has('newDateRange')) {
+            $startDate = $request->input('newDateRange');
             $this->session->put('startDate', $startDate);
         }
 
-        // Update chosen currency if provided in the request
-        if ($request->has('currencyId')) {
-            $choosenID = $request->input('currencyId');
-            // Save the updated chosen currency to session
+        // Update chosen currency ID in session if newCurrencyId is present in the request
+        if ($request->has('newCurrencyId')) {
+            $choosenID = $request->input('newCurrencyId');
             $this->session->put('choosenID', $choosenID);
         }
-        return $this->index();
-    }
 
-    public function Test()
-    {
-        dd('test');
+        // Retrieve selected currencies, start date, and chosen currency ID from the session
+        $selectedCurrencies = $this->userService->getUserCurrencies($user);
+        $startDate = $this->session->get('startDate', 48);
+        $choosenID = $this->session->get('choosenID', $selectedCurrencies->first());
+
+        // Get day currencies based on the selected currencies and start date
+        $dayCurrencies = $this->currencyHistoryService->getHourCurrencies($selectedCurrencies, $startDate);
+
+        // Extract labels, data, and name for the chosen currency
+        $labels = $dayCurrencies->where('id', $choosenID)->pluck('updated_at');
+        $data = $dayCurrencies->where('id', $choosenID)->pluck('sell');
+        $name = $dayCurrencies->where('id', $choosenID)->unique('name')->pluck('name');
+
+        // Prepare the server variable to be returned as JSON response
+        $serverVariable = [
+            'labels' => $labels,
+            'name' => $name,
+            'data' => $data,
+        ];
+
+        // Return the server variable as JSON response
+        return response()->json(['serverVariable' => $serverVariable]);
     }
 }

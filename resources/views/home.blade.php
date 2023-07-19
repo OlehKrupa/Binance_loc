@@ -44,6 +44,7 @@
                             <a id="labels">{!! $labels !!}</a>
                             <a id="name">{!! $name !!}</a>
                             <a id="data">{!! $data !!}</a>
+                            <a id="choosenID">{!! $choosenID !!}</a>
                         </div>
 
                         <!-- Add DataTable -->

@@ -52,25 +52,27 @@ $(document).ready(function () {
     }
   });
 
-  // Highlight the selected row on page load
-  highlightRow("{{ $choosenID }}");
-
   // Store the selected date range in local storage
   var selectedDateRange = localStorage.getItem('selectedDateRange');
   if (selectedDateRange) {
     $('#dateRangeSelect').val(selectedDateRange);
   }
 
-  // Get chart data from HTML spans
+  // Get data from HTML spans
   var labelsSpan = document.getElementById('labels');
   var nameSpan = document.getElementById('name');
   var dataSpan = document.getElementById('data');
+  var choosenIDSpan = document.getElementById('choosenID');
   var ctx = document.getElementById('myChart').getContext('2d');
 
   // Parse the chart data from the spans
   var labels = JSON.parse(labelsSpan.textContent);
   var name = JSON.parse(nameSpan.textContent);
   var data = JSON.parse(dataSpan.textContent);
+  var choosenID = JSON.parse(choosenIDSpan.textContent);
+
+  // Highlight the selected row on page load
+  highlightRow(choosenID);
 
   // Configure the chart
   var config = {
@@ -130,7 +132,7 @@ function sendDateRange(dateRange) {
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
-    url: "/home/sendDateRange",
+    url: "/home",
     type: "POST",
     data: dataToSend,
     success: function success(response) {
@@ -161,7 +163,7 @@ function sendCurrency(currencyId) {
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
-    url: "/home/sendCurrency",
+    url: "/home",
     type: "POST",
     data: dataToSend,
     success: function success(response) {
