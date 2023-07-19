@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Helpers\Telegram;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Http;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,7 +13,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(Telegram::class, function($app){
+           return new Telegram(new Http());
+        });
     }
 
     /**
