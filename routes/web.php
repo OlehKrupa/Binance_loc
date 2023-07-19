@@ -27,10 +27,8 @@ Route::middleware('checkCryptocurrencyCount')->group(function () {
     Route::post('/home', [HomeController::class, 'filtered'])->name('home.filtered');
 });
 
-Route::middleware('checkCryptocurrencyCount')->name('preferences.')->group(function () {
-    Route::get('/preferences', [PreferencesController::class, 'index'])->name('index');
-    Route::post('/preferences/update', [PreferencesController::class, 'update'])->name('update');
-});
+Route::get('/preferences', [PreferencesController::class, 'index'])->name('preferences');
+Route::post('/preferences/update', [PreferencesController::class, 'update'])->name('preferences.update');
 
 Route::get('/test', [HomeController::class, 'test'])->name('test');
 
