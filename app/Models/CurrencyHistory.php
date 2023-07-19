@@ -12,14 +12,24 @@ class CurrencyHistory extends Model
 
     protected $table = 'currency_history';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'currency_id',
         'sell',
         'buy',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
-        'created_at'=> 'datetime',
-        'updated_at'=> 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 }

@@ -1,6 +1,6 @@
 var myChart;
 
-$(document).ready(function() {
+$(document).ready(function () {
     // Initialize DataTable for currencyTable
     $('#currencyTable').DataTable({
         paging: false,
@@ -10,31 +10,33 @@ $(document).ready(function() {
         }
     });
 
-    // Highlight the selected row on page load
-    highlightRow("{{ $choosenID }}");
-
     // Store the selected date range in local storage
     var selectedDateRange = localStorage.getItem('selectedDateRange');
     if (selectedDateRange) {
         $('#dateRangeSelect').val(selectedDateRange);
     }
 
-    // Get chart data from HTML spans
+    // Get data from HTML spans
     var labelsSpan = document.getElementById('labels');
     var nameSpan = document.getElementById('name');
     var dataSpan = document.getElementById('data');
+    var choosenIDSpan = document.getElementById('choosenID');
     var ctx = document.getElementById('myChart').getContext('2d');
 
     // Parse the chart data from the spans
     var labels = JSON.parse(labelsSpan.textContent);
     var name = JSON.parse(nameSpan.textContent);
     var data = JSON.parse(dataSpan.textContent);
+    var choosenID = JSON.parse(choosenIDSpan.textContent);
+
+    // Highlight the selected row on page load
+    highlightRow(choosenID);
 
     // Configure the chart
     var config = {
         type: 'line',
         data: {
-            labels: labels.map(function(label) {
+            labels: labels.map(function (label) {
                 var date = new Date(label);
                 return formatDate(date);
             }),
@@ -54,13 +56,13 @@ $(document).ready(function() {
     myChart = new Chart(ctx, config);
 
     // Event handler for date range select change
-    $('#dateRangeSelect').on('change', function() {
+    $('#dateRangeSelect').on('change', function () {
         var dateRange = $(this).val();
         sendDateRange(dateRange);
     });
 
     // Event handler for clicking on a table row
-    $('#currencyTable tbody').on('click', 'tr', function() {
+    $('#currencyTable tbody').on('click', 'tr', function () {
         var currencyId = $(this).data('currencyid');
         sendCurrency(currencyId);
     });
@@ -89,15 +91,15 @@ function sendDateRange(dateRange) {
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: "/home/sendDateRange",
+        url: "/home",
         type: "POST",
         data: dataToSend,
-        success: function(response) {
+        success: function (response) {
             // Update the chart data
             $('#labels').text(JSON.stringify(response.serverVariable.labels));
             $('#name').text(JSON.stringify(response.serverVariable.name));
             $('#data').text(JSON.stringify(response.serverVariable.data));
-            myChart.data.labels = response.serverVariable.labels.map(function(label) {
+            myChart.data.labels = response.serverVariable.labels.map(function (label) {
                 var date = new Date(label);
                 return formatDate(date);
             });
@@ -105,7 +107,7 @@ function sendDateRange(dateRange) {
             myChart.data.datasets[0].data = response.serverVariable.data;
             myChart.update();
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.error("Error:", error);
         }
     });
@@ -121,16 +123,16 @@ function sendCurrency(currencyId) {
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        url: "/home/sendCurrency",
+        url: "/home",
         type: "POST",
         data: dataToSend,
-        success: function(response) {
+        success: function (response) {
             // Highlight the selected row and update the chart data
             highlightRow(currencyId);
             $('#labels').text(JSON.stringify(response.serverVariable.labels));
             $('#name').text(JSON.stringify(response.serverVariable.name));
             $('#data').text(JSON.stringify(response.serverVariable.data));
-            myChart.data.labels = response.serverVariable.labels.map(function(label) {
+            myChart.data.labels = response.serverVariable.labels.map(function (label) {
                 var date = new Date(label);
                 return formatDate(date);
             });
@@ -138,7 +140,7 @@ function sendCurrency(currencyId) {
             myChart.data.datasets[0].data = response.serverVariable.data;
             myChart.update();
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.error("Error:", error);
         }
     });

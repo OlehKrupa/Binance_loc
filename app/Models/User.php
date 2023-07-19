@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -45,12 +44,17 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'subscribed_at'=> 'datetime',
-        'created_at'=> 'datetime',
-        'updated_at'=> 'datetime',
-        'deleted_at'=> 'datetime',
+        'subscribed_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
+    /**
+     * Get the currencies associated with the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function currencies(): BelongsToMany
     {
         return $this->belongsToMany(Currency::class, 'user_currency', 'user_id', 'currency_id')

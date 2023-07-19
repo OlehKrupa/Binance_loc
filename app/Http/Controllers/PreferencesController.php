@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -9,38 +10,81 @@ use App\Http\Requests\PreferencesUpdateRequest;
 
 class PreferencesController extends Controller
 {
+    /**
+     * The currency service instance.
+     *
+     * @var CurrencyService
+     */
     private $currencyService;
+
+    /**
+     * The currency history service instance.
+     *
+     * @var CurrencyHistoryService
+     */
     private $currencyHistoryService;
+
+    /**
+     * The user service instance.
+     *
+     * @var UserService
+     */
     private $userService;
 
-    public function __construct(CurrencyService $currencyService, CurrencyHistoryService $currencyHistoryService, UserService $userService)
-    {
+    /**
+     * Create a new PreferencesController instance.
+     *
+     * @param CurrencyService $currencyService
+     * @param CurrencyHistoryService $currencyHistoryService
+     * @param UserService $userService
+     */
+    public function __construct(
+        CurrencyService $currencyService,
+        CurrencyHistoryService $currencyHistoryService,
+        UserService $userService
+    ) {
         $this->currencyService = $currencyService;
         $this->currencyHistoryService = $currencyHistoryService;
         $this->userService = $userService;
     }
 
+    /**
+     * Display the preferences page.
+     *
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
+        // Get all currencies
         $currencies = $this->currencyService->all();
 
+        // Get IDs of all currencies
         $currenciesId = $currencies->pluck('id');
 
+        // Get the authenticated user
         $user = auth()->user();
-        
+
+        // Get hourly currency prices for the last 24 hours
         $prices = $this->currencyHistoryService->getHourCurrencies($currenciesId, 24)->unique();
-        
+
+        // Analyze currency trends
         $trends = $this->currencyHistoryService->analyzeCurrencyTrend($currenciesId);
 
+        // Get the user's selected currencies
         $selectedCurrencies = $this->userService->getUserCurrencies($user);
 
         return view('preferences')
-        ->with('prices', $prices)
-        ->with('trends', $trends)
-        ->with('selectedCurrencies' , $selectedCurrencies);
+            ->with('prices', $prices)
+            ->with('trends', $trends)
+            ->with('selectedCurrencies', $selectedCurrencies);
     }
 
-
+    /**
+     * Update the user's preferences.
+     *
+     * @param PreferencesUpdateRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(PreferencesUpdateRequest $request)
     {
         // Get the selected cryptocurrencies from the request

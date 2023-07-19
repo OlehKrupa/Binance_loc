@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Repositories\CurrencyRepository;
@@ -11,6 +12,11 @@ class CurrencyService extends BaseService
         $this->repo = $repo;
     }
 
+    /**
+     * Get all currency IDs.
+     *
+     * @return array
+     */
     public function getAllCurrenciesId()
     {
         return $this->repo->getAllCurrenciesId();

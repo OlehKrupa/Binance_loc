@@ -7,11 +7,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\User;
-use App\Models\Currency;
+use App\Services\UserService;
 
 class CheckCryptocurrencyCount
 {
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     /**
      * Handle an incoming request.
      *
@@ -20,7 +26,7 @@ class CheckCryptocurrencyCount
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
-            $selectedCryptocurrenciesCount = Auth::user()->currencies()->count();
+            $selectedCryptocurrenciesCount = $this->userService->getUserCurrencies(Auth::user())->count();
 
             if ($selectedCryptocurrenciesCount < 1) {
                 return redirect()->route('preferences');

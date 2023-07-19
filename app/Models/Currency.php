@@ -12,6 +12,11 @@ class Currency extends Model
 
     protected $table = 'currency';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'name',
         'full_name',
@@ -19,11 +24,21 @@ class Currency extends Model
         'image_url',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
-        'created_at'=> 'datetime',
-        'updated_at'=> 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
+    /**
+     * Get the users associated with the currency.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_currency', 'currency_id', 'users_id')

@@ -12,21 +12,43 @@ class UserCurrency extends Model
 
     protected $table = 'user_currency';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'user_id',
         'currency_id',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
-        'created_at'=> 'datetime',
-        'updated_at'=> 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
-    public function users(){
-        return $this->hasMany(User::class, 'user_id','id')->withTimestamps();
+    /**
+     * Get the users associated with the UserCurrency.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function users()
+    {
+        return $this->hasMany(User::class, 'user_id', 'id')->withTimestamps();
     }
 
-    public function currencies(){
-        return $this->hasMany(Currency::class,'currency_id','id')->withTimestamps();
+    /**
+     * Get the currencies associated with the UserCurrency.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function currencies()
+    {
+        return $this->hasMany(Currency::class, 'currency_id', 'id')->withTimestamps();
     }
 }

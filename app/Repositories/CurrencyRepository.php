@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Repositories\BaseRepository;
@@ -11,6 +12,11 @@ class CurrencyRepository extends BaseRepository
         $this->model = $model;
     }
 
+    /**
+     * Get all currency IDs.
+     *
+     * @return array
+     */
     public function getAllCurrenciesId()
     {
         return Currency::all()->pluck('id')->toArray();

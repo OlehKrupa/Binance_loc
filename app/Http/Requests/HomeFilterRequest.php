@@ -47,12 +47,12 @@ class HomeFilterRequest extends FormRequest
 
         $rules = [];
 
-        if ($this->has('dateRange')) {
-            $rules['dateRange'] = 'required|integer|min:0';
+        if ($this->has('newDateRange')) {
+            $rules['newDateRange'] = 'required|integer|min:0';
         }
 
-        if ($this->has('currencyId')) {
-            $rules['currencyId'] = 'required|in:' . implode(',', $dayCurrencies);
+        if ($this->has('newCurrencyId')) {
+            $rules['newCurrencyId'] = 'required|in:' . implode(',', $dayCurrencies);
         }
 
         return $rules;
@@ -66,11 +66,11 @@ class HomeFilterRequest extends FormRequest
     public function messages()
     {
         return [
-            'dateRange.required' => 'The date range field is required.',
-            'dateRange.integer' => 'The date range must be an integer.',
-            'dateRange.min' => 'The date range must be at least 1.',
-            'currencyId.required' => 'The currency ID field is required.',
-            'currencyId.in' => 'The selected currency ID is invalid.',
+            'newDateRange.required' => 'The date range field is required.',
+            'newDateRange.integer' => 'The date range must be an integer.',
+            'newDateRange.min' => 'The date range must be at least 1.',
+            'newCurrencyId.required' => 'The currency ID field is required.',
+            'newCurrencyId.in' => 'The selected currency ID is invalid.',
         ];
     }
 }

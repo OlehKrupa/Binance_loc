@@ -1,6 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PreferencesController;
+use App\Http\Controllers\HomeController;
+use App\Helpers\Telegram;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,22 +17,24 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-//test
 
-Route::get('/', function () {
-    return view('welcome');
-})->middleware('checkCryptocurrencyCount');
+Route::middleware('checkCryptocurrencyCount')->group(function () {
+    Route::get('/', function () {
+        return view('welcome');
+    })->name('home');
 
-Route::get('/preferences', [App\Http\Controllers\PreferencesController::class, 'index'])->name('preferences');
-Route::post('/preferences/update', [App\Http\Controllers\PreferencesController::class, 'update'])->name('preferences.update');
+    Route::get('/home', [HomeController::class, 'index'])->name('home.index');
+    Route::post('/home', [HomeController::class, 'filtered'])->name('home.filtered');
+});
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware('checkCryptocurrencyCount')->name('home');
-Route::get('/test', [App\Http\Controllers\HomeController::class, 'test'])->name('test');
-Route::post('/home', [App\Http\Controllers\HomeController::class, 'filtered'])->middleware('checkCryptocurrencyCount')->name('home.filtered');
-Route::post('/home/sendDateRange', [App\Http\Controllers\HomeController::class, 'getDateRange'])->name('home.sendDateRange');
-Route::post('/home/sendCurrency', [App\Http\Controllers\HomeController::class, 'getCurrencyId'])->name('home.sendCurrency');
+Route::middleware('checkCryptocurrencyCount')->name('preferences.')->group(function () {
+    Route::get('/preferences', [PreferencesController::class, 'index'])->name('index');
+    Route::post('/preferences/update', [PreferencesController::class, 'update'])->name('update');
+});
 
-Route::get('/telegram', function (\App\Helpers\Telegram $telegram) {
+Route::get('/test', [HomeController::class, 'test'])->name('test');
+
+Route::get('/telegram', function (Telegram $telegram) {
     $buttons = [
         'inline_keyboard' => [
             [
@@ -45,12 +52,12 @@ Route::get('/telegram', function (\App\Helpers\Telegram $telegram) {
     $sendMessage = $telegram->sendButtons(337612279, 'Cryptocurrencies distribution in telegram', json_encode($buttons));
 });
 
-Auth::routes();
-
 Route::get('/clear', function () {
     Artisan::call('cache:clear');
     Artisan::call('config:cache');
     Artisan::call('view:clear');
     Artisan::call('route:clear');
-    return "Кэш очищен.";
+    return redirect('http://localhost/home');
 });
+
+Auth::routes();
