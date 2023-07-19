@@ -27,30 +27,8 @@ Route::middleware('checkCryptocurrencyCount')->group(function () {
     Route::post('/home', [HomeController::class, 'filtered'])->name('home.filtered');
 });
 
-Route::middleware('checkCryptocurrencyCount')->name('preferences.')->group(function () {
-    Route::get('/preferences', [PreferencesController::class, 'index'])->name('index');
-    Route::post('/preferences/update', [PreferencesController::class, 'update'])->name('update');
-});
-
-Route::get('/test', [HomeController::class, 'test'])->name('test');
-
-Route::get('/telegram', function (Telegram $telegram) {
-    $buttons = [
-        'inline_keyboard' => [
-            [
-                [
-                    'text' => 'subscribe',
-                    'callback_data' => '1'
-                ],
-                [
-                    'text' => 'unsubscribe',
-                    'callback_data' => '2'
-                ],
-            ]
-        ]
-    ];
-    $sendMessage = $telegram->sendButtons(337612279, 'Cryptocurrencies distribution in telegram', json_encode($buttons));
-});
+Route::get('/preferences', [PreferencesController::class, 'index'])->name('preferences');
+Route::post('/preferences/update', [PreferencesController::class, 'update'])->name('preferences.update');
 
 Route::get('/clear', function () {
     Artisan::call('cache:clear');
