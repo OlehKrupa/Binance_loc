@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Http;
 class HomeController extends Controller
 {
 //123
-//agasd
+//agasdlohjlkhklj
     /**
      * The session store instance.
      *
