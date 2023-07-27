@@ -44,6 +44,11 @@ class UserService extends BaseService
         return $this->repo->getUsersTelegramId();
     }
 
+    public function updateSubscribedAt(User $user)
+    {
+        return $this->repo->updateSubscribedAt($user);
+    }
+
     /**
      * Detach all currencies associated with the user.
      *

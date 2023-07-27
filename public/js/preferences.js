@@ -27,6 +27,18 @@ $(document).ready(function () {
     // Disable pagination
     dom: 'lfrt' // Define the layout of the DataTable components (l - length changing input, f - filtering input, r - processing display, t - table, t - table)
   });
+
+  // Event handler for the click on the button
+  $('#emailSubscribeButton').on('click', function (e) {
+    e.preventDefault(); // Prevent the default action of the button (form submission)
+
+    // Execute an AJAX request to the specified route
+    $.ajax({
+      url: '/preferences/email',
+      type: 'GET',
+      dataType: 'json'
+    });
+  });
 });
 /******/ })()
 ;
