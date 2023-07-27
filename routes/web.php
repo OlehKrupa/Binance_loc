@@ -3,9 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PreferencesController;
 use App\Http\Controllers\HomeController;
-use App\Helpers\Telegram;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\TelegramController;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,9 +31,11 @@ Route::middleware('checkCryptocurrencyCount')->group(function () {
 Route::get('/preferences', [PreferencesController::class, 'index'])->name('preferences');
 Route::post('/preferences/update', [PreferencesController::class, 'update'])->name('preferences.update');
 
+Route::get('/preferences/email', [PreferencesController::class, 'subscribeEmail'])->name('subscribeEmail');
+//Route::post('/webhook/telegram', [TelegramController::class, 'subscribeTG']);
+
 Route::get('/clear', function () {
     Artisan::call('cache:clear');
-    Artisan::call('config:cache');
     Artisan::call('view:clear');
     Artisan::call('route:clear');
     return redirect('http://localhost/home');

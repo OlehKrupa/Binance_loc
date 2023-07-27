@@ -62,7 +62,21 @@
                             </table>
                         </div>
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Save Preferences</button>
+                            <div style="display: flex; justify-content: space-between;">
+                                <button class="btn btn-primary">Save Preferences</button>
+                                <div>
+                                    <form id="subscribeForm" method="GET">
+                                        <!--Динамічність буде у VUE, зараз це костиль-->
+                                        <button id="emailSubscribeButton" class="btn btn-primary">
+                                            @if ($isEmail === null)
+                                                Subscribe emailing
+                                            @else
+                                                Unsubscribe emailing
+                                            @endif
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>

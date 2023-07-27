@@ -73,10 +73,14 @@ class PreferencesController extends Controller
         // Get the user's selected currencies
         $selectedCurrencies = $this->userService->getUserCurrencies($user);
 
+        //КостЫль кодим
+        $isEmail = $this->userService->findById($user->id);
+
         return view('preferences')
             ->with('prices', $prices)
             ->with('trends', $trends)
-            ->with('selectedCurrencies', $selectedCurrencies);
+            ->with('selectedCurrencies', $selectedCurrencies)
+            ->with('isEmail', $isEmail['subscribed_at']);
     }
 
     /**
@@ -101,5 +105,13 @@ class PreferencesController extends Controller
 
         // Redirect to the "/home" page with a success message
         return redirect('/home')->with('success', 'Preferences updated successfully.');
+    }
+
+    public function subscribeEmail()
+    {
+        // Get the authenticated user
+        $user = auth()->user();
+
+        $this->userService->updateSubscribedAt($user);
     }
 }

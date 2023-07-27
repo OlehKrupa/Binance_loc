@@ -33,6 +33,23 @@ class UserRepository extends BaseRepository
     }
 
     /**
+     * Update the "subscribed_at" field for the user.
+     *
+     * @param \App\Models\User $user
+     * @param \DateTime|null $subscribedAt
+     * @return void
+     */
+    public function updateSubscribedAt(User $user)
+    {
+        if ($user->subscribed_at !== null) {
+            $user->subscribed_at = null;
+        } else {
+            $user->subscribed_at = now();
+        }
+        $user->save();
+    }
+
+    /**
      * Get the currencies associated with the user.
      *
      * @param \App\Models\User $user
