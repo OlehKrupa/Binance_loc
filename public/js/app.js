@@ -3257,7 +3257,13 @@ function withinMaxClamp(min, value, max) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
+Object(function webpackMissingModule() { var e = new Error("Cannot find module 'components/Dashboard'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
 
+
+var app = new vue({
+  el: '#app',
+  components: Object(function webpackMissingModule() { var e = new Error("Cannot find module 'components/Dashboard'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())
+});
 
 /***/ }),
 

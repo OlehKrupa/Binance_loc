@@ -32,4 +32,9 @@ class CurrencyHistory extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class, 'currency_id');
+    }
 }

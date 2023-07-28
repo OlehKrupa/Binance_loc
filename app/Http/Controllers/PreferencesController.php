@@ -76,11 +76,16 @@ class PreferencesController extends Controller
         //КостЫль кодим
         $isEmail = $this->userService->findById($user->id);
 
-        return view('preferences')
-            ->with('prices', $prices)
-            ->with('trends', $trends)
-            ->with('selectedCurrencies', $selectedCurrencies)
-            ->with('isEmail', $isEmail['subscribed_at']);
+        // Prepare the data to be returned as JSON response
+        $responseData = [
+            'prices' => $prices,
+            'trends' => $trends,
+            'selectedCurrencies' => $selectedCurrencies,
+            'isEmail' => $isEmail['subscribed_at'],
+        ];
+
+        // Return the data as a JSON response
+        return response()->json($responseData);
     }
 
     /**
