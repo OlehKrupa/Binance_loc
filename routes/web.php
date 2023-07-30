@@ -5,8 +5,6 @@ use App\Http\Controllers\PreferencesController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
-use App\Http\Controllers\TelegramController;
-use Telegram\Bot\Laravel\Facades\Telegram;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +17,7 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 |
 */
 
+/*
 Route::middleware('checkCryptocurrencyCount')->group(function () {
     Route::get('/', function () {
         return view('welcome');
@@ -42,3 +41,4 @@ Route::get('/clear', function () {
 });
 
 Auth::routes();
+*/
