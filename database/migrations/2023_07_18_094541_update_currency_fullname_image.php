@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::table('currency', function (Blueprint $table) {
             $table->string('full_name')->nullable();
-            $table->binary('image')->nullable();
         });
     }
 
@@ -24,7 +23,6 @@ return new class extends Migration
     {
         Schema::table('currency', function (Blueprint $table) {
             $table->dropColumn('full_name');
-            $table->dropColumn('image');
         });
     }
 };
