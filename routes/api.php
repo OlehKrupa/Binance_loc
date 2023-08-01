@@ -2,8 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Api\CurrencyController;
+use App\Http\Controllers\Api\HistoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,20 +18,22 @@ use App\Http\Controllers\HomeController;
 |
 */
 
-/*
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-*/
-
-Route::post('/tokens/create', function (Request $request) {
-    $token = $request->user()->createToken($request->token_name);
-
-    return ['token' => $token->plainTextToken];
-});
-
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
 Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+
+    Route::get('/user', function (Request $request) {
+
+        return $request->user();
+    });
+
+    Route::get('/user/preferences', [UserController::class, 'getPreferences'])->name('auth.getPreferences');
+    Route::put('/user/preferences', [UserController::class, 'setPreferences'])->name('auth.setPreferences');
+
+    Route::get('/user/history', [UserController::class, 'getUserCurrencyHistory'])->name('auth.getUserCurrencyHistory');
+
+    Route::apiResource('/currency', CurrencyController::class);
+    Route::apiResource('/history', HistoryController::class);
 });

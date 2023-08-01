@@ -63,6 +63,11 @@ class CurrencyHistoryService extends BaseService
         return $this->repo->getHourCurrencies($selectedCurrencies, $hours);
     }
 
+    public function getAllSelectedCurrencies($selectedCurrencies)
+    {
+        return $this->repo->getAllSelectedCurrencies($selectedCurrencies);
+    }
+
     /**
      * Analyze the currency trend for the selected currencies within the current day.
      *

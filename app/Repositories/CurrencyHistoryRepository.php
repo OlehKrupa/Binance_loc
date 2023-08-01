@@ -61,6 +61,15 @@ class CurrencyHistoryRepository extends BaseRepository
             ->get();
     }
 
+    public static function getAllSelectedCurrencies($selectedCurrencies)
+    {
+        return CurrencyHistory::select('currency.id', 'currency.name', 'currency.full_name', 'currency.image_url', 'currency_history.sell', 'currency_history.buy', 'currency_history.updated_at')
+            ->join('currency', 'currency_history.currency_id', '=', 'currency.id')
+            ->whereIn('currency.id', $selectedCurrencies)
+            ->distinct()
+            ->get();
+    }
+
     /**
      * Analyze the currency trend for the selected currencies within the current day.
      *
