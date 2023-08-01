@@ -65,9 +65,9 @@ return [
 
         'mysql_testing' => [
             'driver' => 'mysql',
-            'host' => env('TEST_DB_HOST', '127.0.0.1'), // Укажите хост вашей тестовой базы данных
+            'host' => env('TEST_DB_HOST', '127.0.0.1'),
             'port' => env('TEST_DB_PORT', '3306'),
-            'database' => env('TEST_DB_DATABASE', 'forge_test'), // Укажите имя вашей тестовой базы данных
+            'database' => env('TEST_DB_DATABASE', 'forge'),
             'username' => env('TEST_DB_USERNAME', 'forge'),
             'password' => env('TEST_DB_PASSWORD', ''),
             'unix_socket' => env('TEST_DB_SOCKET', ''),
