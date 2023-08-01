@@ -22,8 +22,14 @@ class CurrencyControllerTest extends TestCase
         // Create some test currencies in the database
         Currency::factory()->count(5)->create();
 
-        // Send a GET request to the index method of CurrencyController
-        $response = $this->get('/api/currencies');
+        // Get an authenticated user with Sanctum token
+        $user = User::factory()->create();
+        $token = $user->createToken('test-token')->plainTextToken;
+
+        // Send a GET request to the index method of CurrencyController with the Bearer token
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->get('localhost:80/api/currency/');
 
         // Assert that the response has a successful status code
         $response->assertStatus(200);
@@ -48,8 +54,9 @@ class CurrencyControllerTest extends TestCase
      */
     public function testCreateCurrency()
     {
-        // Simulate a logged-in user (you may need to modify this depending on your authentication system)
-        $this->actingAs(User::factory()->create());
+        // Get an authenticated user with Sanctum token
+        $user = User::factory()->create();
+        $token = $user->createToken('test-token')->plainTextToken;
 
         // Data for the new currency
         $data = [
@@ -58,8 +65,10 @@ class CurrencyControllerTest extends TestCase
             'image_url' => 'https://example.com/usd.png',
         ];
 
-        // Send a POST request to the store method of CurrencyController with the data
-        $response = $this->post('/api/currencies', $data);
+        // Send a POST request to the store method of CurrencyController with the data and Bearer token
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->post('/api/currencies', $data);
 
         // Assert that the response has a successful status code
         $response->assertStatus(200);
@@ -88,8 +97,14 @@ class CurrencyControllerTest extends TestCase
         // Create a test currency in the database
         $currency = Currency::factory()->create();
 
-        // Send a GET request to the show method of CurrencyController with the currency ID
-        $response = $this->get('/api/currencies/' . $currency->id);
+        // Get an authenticated user with Sanctum token
+        $user = User::factory()->create();
+        $token = $user->createToken('test-token')->plainTextToken;
+
+        // Send a GET request to the show method of CurrencyController with the currency ID and Bearer token
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->get('/api/currencies/' . $currency->id);
 
         // Assert that the response has a successful status code
         $response->assertStatus(200);
@@ -122,8 +137,9 @@ class CurrencyControllerTest extends TestCase
      */
     public function testUpdateCurrency()
     {
-        // Simulate a logged-in user (you may need to modify this depending on your authentication system)
-        $this->actingAs(User::factory()->create());
+        // Get an authenticated user with Sanctum token
+        $user = User::factory()->create();
+        $token = $user->createToken('test-token')->plainTextToken;
 
         // Create a test currency in the database
         $currency = Currency::factory()->create();
@@ -135,8 +151,10 @@ class CurrencyControllerTest extends TestCase
             'image_url' => 'https://example.com/eur.png',
         ];
 
-        // Send a PUT request to the update method of CurrencyController with the currency ID and data
-        $response = $this->put('/api/currencies/' . $currency->id, $data);
+        // Send a PUT request to the update method of CurrencyController with the currency ID, data, and Bearer token
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->put('/api/currencies/' . $currency->id, $data);
 
         // Assert that the response has a successful status code
         $response->assertStatus(200);
@@ -162,14 +180,17 @@ class CurrencyControllerTest extends TestCase
      */
     public function testDeleteCurrency()
     {
-        // Simulate a logged-in user (you may need to modify this depending on your authentication system)
-        $this->actingAs(User::factory()->create());
+        // Get an authenticated user with Sanctum token
+        $user = User::factory()->create();
+        $token = $user->createToken('test-token')->plainTextToken;
 
         // Create a test currency in the database
         $currency = Currency::factory()->create();
 
-        // Send a DELETE request to the destroy method of CurrencyController with the currency ID
-        $response = $this->delete('/api/currencies/' . $currency->id);
+        // Send a DELETE request to the destroy method of CurrencyController with the currency ID and Bearer token
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->delete('/api/currencies/' . $currency->id);
 
         // Assert that the response has a successful status code
         $response->assertStatus(200);
