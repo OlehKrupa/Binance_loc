@@ -90,7 +90,7 @@ class CurrencyController extends Controller
             $currency = $this->currencyService->findById($id)->update($request->all());
 
             // Return the updated currency as a JSON response using CurrencyResource
-            return response()->json($currency, 200);
+            return response()->json($this->currencyService->findById($id), 200);
         } catch (ModelNotFoundException $e) {
             // Handle the "Currency not found" scenario and return a JSON 404 response
             return response()->json(['error' => 'Currency not found'], 404);

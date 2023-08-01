@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 use App\Models\Currency;
 use App\Models\User;
@@ -25,11 +26,14 @@ class CurrencyControllerTest extends TestCase
         // Get an authenticated user with Sanctum token
         $user = User::factory()->create();
         $token = $user->createToken('test-token')->plainTextToken;
+        
+        //Sanctum::actingAs($user);
 
         // Send a GET request to the index method of CurrencyController with the Bearer token
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->get('localhost:80/api/currency/');
+        ])->getJson('/api/currency');
+        //names instad routes!!!
 
         // Assert that the response has a successful status code
         $response->assertStatus(200);
@@ -68,7 +72,7 @@ class CurrencyControllerTest extends TestCase
         // Send a POST request to the store method of CurrencyController with the data and Bearer token
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->post('/api/currencies', $data);
+        ])->postJson('/api/currency', $data);
 
         // Assert that the response has a successful status code
         $response->assertStatus(200);
@@ -104,7 +108,7 @@ class CurrencyControllerTest extends TestCase
         // Send a GET request to the show method of CurrencyController with the currency ID and Bearer token
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->get('/api/currencies/' . $currency->id);
+        ])->getJson('/api/currency/' . $currency->id);
 
         // Assert that the response has a successful status code
         $response->assertStatus(200);
@@ -154,7 +158,7 @@ class CurrencyControllerTest extends TestCase
         // Send a PUT request to the update method of CurrencyController with the currency ID, data, and Bearer token
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->put('/api/currencies/' . $currency->id, $data);
+        ])->putJson('/api/currency/' . $currency->id, $data);
 
         // Assert that the response has a successful status code
         $response->assertStatus(200);
@@ -190,7 +194,7 @@ class CurrencyControllerTest extends TestCase
         // Send a DELETE request to the destroy method of CurrencyController with the currency ID and Bearer token
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->delete('/api/currencies/' . $currency->id);
+        ])->deleteJson('/api/currency/' . $currency->id);
 
         // Assert that the response has a successful status code
         $response->assertStatus(200);
