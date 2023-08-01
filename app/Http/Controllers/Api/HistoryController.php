@@ -35,6 +35,45 @@ class HistoryController extends Controller
     }
 
     /**
+     * Analyzes the currency trend for the selected currencies within the current day.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function analyzeCurrencyTrend()
+    {
+        dd(1);
+        try {
+            $selectedCurrencies = $this->currencyHistoryService->getUniqueCurrenciesId();
+            $trend = $this->currencyHistoryService->analyzeCurrencyTrend($selectedCurrencies);
+            dd($trend);
+
+            return response()->json($trend, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Internal server error'], 500);
+        }
+    }
+
+    /**
+     * Returns the last recorded currencies for the selected currencies.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getLastCurrencies()
+    {
+        dd(1);
+        try {
+            $selectedCurrencies = $this->currencyHistoryService->getUniqueCurrenciesId();
+            $lastCurrencies = $this->currencyHistoryService->getLastCurrencies($selectedCurrencies);
+
+            dd($lastCurrencies);
+
+            return response()->json($lastCurrencies, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Internal server error'], 500);
+        }
+    }
+
+    /**
      * Creates a new currency exchange rate history record.
      *
      * @param  \Illuminate\Http\Request  $request
