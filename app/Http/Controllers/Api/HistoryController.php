@@ -41,7 +41,6 @@ class HistoryController extends Controller
      */
     public function analyzeCurrencyTrend()
     {
-        dd(1);
         try {
             $selectedCurrencies = $this->currencyHistoryService->getUniqueCurrenciesId();
             $trend = $this->currencyHistoryService->analyzeCurrencyTrend($selectedCurrencies);
@@ -60,7 +59,6 @@ class HistoryController extends Controller
      */
     public function getLastCurrencies()
     {
-        dd(1);
         try {
             $selectedCurrencies = $this->currencyHistoryService->getUniqueCurrenciesId();
             $lastCurrencies = $this->currencyHistoryService->getLastCurrencies($selectedCurrencies);
@@ -69,22 +67,6 @@ class HistoryController extends Controller
 
             return response()->json($lastCurrencies, 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Internal server error'], 500);
-        }
-    }
-
-    /**
-     * Creates a new currency exchange rate history record.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     */
-    public function store(Request $request)
-    {
-        try {
-            // Create a new currency exchange rate history record using the request data and return it as a JSON response
-            return response()->json($this->currencyHistoryService->create($request->all()), 200);
-        } catch (\Exception $e) {
-            // Handle other unexpected errors and return a JSON 500 response
             return response()->json(['error' => 'Internal server error'], 500);
         }
     }
@@ -103,34 +85,6 @@ class HistoryController extends Controller
 
             // Return the currency exchange rate history records as a JSON response using HistoryResource
             return response()->json($currencyHistories, 200);
-        } catch (\Exception $e) {
-            // Handle other unexpected errors and return a JSON 500 response
-            return response()->json(['error' => 'Internal server error'], 500);
-        }
-    }
-
-    /**
-     * Updates information about a currency exchange rate history record.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     */
-    public function update(Request $request, $id)
-    {
-        try {
-            // Find the currency exchange rate history record by ID
-            $history = $this->currencyHistoryService->findById($id);
-
-            // If the currency exchange rate history record does not exist, return a JSON response with a 404 error
-            if (!$history) {
-                return response()->json(['error' => 'Currency history not found'], 404);
-            }
-
-            // Update the currency exchange rate history record with the new request data
-            $history->update($request->all());
-
-            // Return the updated currency exchange rate history record as a JSON response
-            return response()->json($history, 200);
         } catch (\Exception $e) {
             // Handle other unexpected errors and return a JSON 500 response
             return response()->json(['error' => 'Internal server error'], 500);
