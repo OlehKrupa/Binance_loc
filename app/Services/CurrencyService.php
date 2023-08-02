@@ -21,4 +21,9 @@ class CurrencyService extends BaseService
     {
         return $this->repo->getAllCurrenciesId();
     }
+
+    public function getAllCurrenciesTrendPrice()
+    {
+        return $this->repo->getAllCurrenciesTrendPrice();
+    }
 }
