@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\HistoryResource;
 use App\Services\CurrencyHistoryService;
 use App\Services\CurrencyService;
+use App\Models\Currency;
+use App\Models\CurrencyHistory;
+use Illuminate\Support\Facades\DB;
 
 class HistoryController extends Controller
 {
@@ -38,7 +41,7 @@ class HistoryController extends Controller
 
     public function chartData()
     {
-        
+
     }
 
     public function preferencesData()
@@ -61,7 +64,7 @@ class HistoryController extends Controller
 
                 $currencyData = [
                     'currency' => $currency,
-                    'last_price' => $lastCurrency ? (float)$lastCurrency->sell : null,
+                    'last_price' => $lastCurrency ? (float) $lastCurrency->sell : null,
                     'trend' => $currencyTrend ? $currencyTrend['trend'] : null,
                 ];
 
@@ -71,6 +74,51 @@ class HistoryController extends Controller
             return response()->json($result, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Internal server error'], 500);
+        }
+    }
+
+    public function preferencesDataEloquent()
+    {
+        try {
+            $today = now()->format('Y-m-d');
+            $daysForPriceChange = 7; // Измените это значение на нужное количество дней
+
+            $subquery_latest_history = CurrencyHistory::select('currency_id', 'sell', 'created_at')
+                ->whereIn(DB::raw('(currency_id, created_at)'), function ($query) use ($today) {
+                    $query->select(DB::raw('currency_id, max(created_at)'))
+                        ->from('currency_history')
+                        ->whereDate('created_at', $today)
+                        ->groupBy('currency_id');
+                });
+
+            $subquery_previous_history = CurrencyHistory::select('currency_id', 'sell', 'created_at')
+                ->whereIn(DB::raw('(currency_id, created_at)'), function ($query) use ($today) {
+                    $query->select(DB::raw('currency_id, max(created_at)'))
+                        ->from('currency_history')
+                        ->where('created_at', '<', $today)
+                        ->groupBy('currency_id');
+                });
+
+
+            $currencies = Currency::select(
+                'currency.id as currency_id',
+                'currency.name as currency_name',
+                'currency.full_name',
+                'currency.image_url',
+                'latest_history.sell as last_sell_price',
+                DB::raw('IFNULL(ROUND(((latest_history.sell - previous_history.sell) / previous_history.sell) * 100, 2), 0) as price_change_percent')
+            )
+                ->leftJoinSub($subquery_latest_history, 'latest_history', function ($join) {
+                    $join->on('currency.id', '=', 'latest_history.currency_id');
+                })
+                ->leftJoinSub($subquery_previous_history, 'previous_history', function ($join) {
+                    $join->on('currency.id', '=', 'previous_history.currency_id');
+                })
+                ->get();
+
+            return response()->json($currencies, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 

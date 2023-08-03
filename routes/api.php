@@ -37,5 +37,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/currency', CurrencyController::class);
     Route::apiResource('/history', HistoryController::class);
 
-    Route::get('/table', [HistoryController::class, 'preferencesData'])->name('getPreferencesData');
+    Route::get('/table', [HistoryController::class, 'preferencesDataEloquent'])->name('preferencesDataEloquent');
 });
