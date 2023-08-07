@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Repositories\BaseRepository;
 use App\Models\CurrencyHistory;
-use App\Models\Currency;
 use Carbon\Carbon;
 
 class CurrencyHistoryRepository extends BaseRepository
@@ -100,7 +99,7 @@ class CurrencyHistoryRepository extends BaseRepository
                 $change = ($lastSell - $firstSell) / $firstSell * 100;
 
                 $trend[$currencyId] = [
-                    'name' => Currency::find($currencyId)->name,
+                    'id' => $currencyId,
                     'trend' => $change,
                 ];
             }

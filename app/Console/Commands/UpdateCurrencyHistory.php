@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Services\CurrencyService;
 use App\Services\CurrencyHistoryService;
+use Illuminate\Support\Facades\DB;
 
 class UpdateCurrencyHistory extends Command
 {
@@ -13,7 +14,7 @@ class UpdateCurrencyHistory extends Command
      *
      * @var string
      */
-    protected $signature = 'currency:update-history';
+    protected $signature = 'currency:update';
 
     /**
      * The console command description.
@@ -57,26 +58,39 @@ class UpdateCurrencyHistory extends Command
      */
     public function handle()
     {
-        // Get all currencies from the CurrencyService
-        $currencies = $this->currencyService->all();
+        // Start the transaction
+        DB::beginTransaction();
 
-        foreach ($currencies as $currency) {
-            $currencyCode = $currency->name;
+        try {
+            // Get all currencies from the CurrencyService
+            $currencies = $this->currencyService->all();
 
-            // Construct the buy and sell URLs using the Coinbase API URL and currency code
-            $buyUrl = env('COINBASE_API_URL') . "{$currencyCode}-USD/buy";
-            $sellUrl = env('COINBASE_API_URL') . "{$currencyCode}-USD/sell";
+            foreach ($currencies as $currency) {
+                $currencyCode = $currency->name;
 
-            // Fetch the buy and sell prices using the fetchPrice function
-            $buyPrice = $this->fetchPrice($buyUrl);
-            $sellPrice = $this->fetchPrice($sellUrl);
-            $currencyId = $currency->id;
+                // Construct the buy and sell URLs using the Coinbase API URL and currency code
+                $buyUrl = env('COINBASE_API_URL') . "{$currencyCode}-USD/buy";
+                $sellUrl = env('COINBASE_API_URL') . "{$currencyCode}-USD/sell";
 
-            // Create the currency history entry using the CurrencyHistoryService
-            $currencyHistory = $this->currencyHistoryService->createCurrencyHistory($currencyId, $sellPrice, $buyPrice);
+                // Fetch the buy and sell prices using the fetchPrice function
+                $buyPrice = $this->fetchPrice($buyUrl);
+                $sellPrice = $this->fetchPrice($sellUrl);
+                $currencyId = $currency->id;
+
+                // Create the currency history entry using the CurrencyHistoryService
+                $this->currencyHistoryService->createCurrencyHistory($currencyId, $sellPrice, $buyPrice);
+            }
+
+            // Commit the transaction if everything is successful
+            DB::commit();
+            
+            $this->info('Currency history updated successfully!');
+        } catch (\Exception $e) {
+            // Rollback the transaction if an exception occurs
+            DB::rollback();
+            
+            $this->error('An error occurred while updating currency history: ' . $e->getMessage());
         }
-
-        $this->info('Currency history updated successfully!');
     }
 
     /**

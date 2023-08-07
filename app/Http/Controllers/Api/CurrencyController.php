@@ -110,7 +110,7 @@ class CurrencyController extends Controller
     {
         try {
             // Find the currency by ID
-            $currency = Currency::findOrFail($id);
+            $currency = $this->currencyService->findById($id);
 
             // Delete the currency
             $currency->delete();

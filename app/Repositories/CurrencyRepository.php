@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Repositories\BaseRepository;
+
 use App\Models\Currency;
 
 class CurrencyRepository extends BaseRepository

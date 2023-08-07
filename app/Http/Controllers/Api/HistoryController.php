@@ -5,17 +5,22 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\HistoryResource;
 use App\Services\CurrencyHistoryService;
-use Illuminate\Http\Request;
+use App\Services\CurrencyService;
+use App\Models\Currency;
+use App\Models\CurrencyHistory;
+use Illuminate\Support\Facades\DB;
 
 class HistoryController extends Controller
 {
+    private $currencyService;
     private $currencyHistoryService;
 
-    public function __construct(CurrencyHistoryService $currencyHistoryService)
+    public function __construct(CurrencyHistoryService $currencyHistoryService, CurrencyService $currencyService)
     {
         // Apply 'auth' middleware to this controller, ensuring the user is authenticated
         $this->middleware('auth');
         $this->currencyHistoryService = $currencyHistoryService;
+        $this->currencyService = $currencyService;
     }
 
     /**
@@ -34,6 +39,89 @@ class HistoryController extends Controller
         }
     }
 
+    public function chartData()
+    {
+
+    }
+
+    public function preferencesData()
+    {
+        try {
+            $allCurrency = $this->currencyService->all();
+            $allCurrencyIds = $allCurrency->pluck('id')->toArray();
+
+            $lastCurrencies = $this->currencyHistoryService->getLastCurrencies($allCurrencyIds);
+            $trend = $this->currencyHistoryService->analyzeCurrencyTrend($allCurrencyIds);
+
+            $result = [];
+
+            foreach ($allCurrency as $currency) {
+                $currencyId = $currency->id;
+
+                $lastCurrency = $lastCurrencies->where('id', $currencyId)->first();
+
+                $currencyTrend = $trend[$currencyId] ?? null;
+
+                $currencyData = [
+                    'currency' => $currency,
+                    'last_price' => $lastCurrency ? (float) $lastCurrency->sell : null,
+                    'trend' => $currencyTrend ? $currencyTrend['trend'] : null,
+                ];
+
+                $result[] = $currencyData;
+            }
+
+            return response()->json($result, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Internal server error'], 500);
+        }
+    }
+
+    public function preferencesDataEloquent()
+{
+    try {
+        $today = now()->format('Y-m-d');
+
+        $subquery_latest_history = CurrencyHistory::select('currency_id', 'sell', 'created_at')
+            ->whereIn(DB::raw('(currency_id, created_at)'), function ($query) use ($today) {
+                $query->select(DB::raw('currency_id, max(created_at)'))
+                    ->from('currency_history')
+                    ->whereDate('created_at', $today)
+                    ->groupBy('currency_id');
+            });
+
+        $subquery_previous_history = CurrencyHistory::select('currency_id', 'sell', 'created_at')
+            ->whereIn(DB::raw('(currency_id, created_at)'), function ($query) use ($today) {
+                $query->select(DB::raw('currency_id, max(created_at)'))
+                    ->from('currency_history')
+                    ->whereDate('created_at', '<', $today)
+                    ->groupBy('currency_id');
+            })
+            ->whereRaw('DATE(created_at) <> ?', [$today]); // Exclude latest history record
+
+        $currencies = Currency::select(
+            'currency.id as currency_id',
+            'currency.name as currency_name',
+            'currency.full_name',
+            'currency.image_url',
+            'latest_history.sell as last_sell_price',
+            DB::raw('IFNULL(ROUND(((latest_history.sell - previous_history.sell) / previous_history.sell) * 100, 2), 0) as price_change_percent')
+        )
+            ->leftJoinSub($subquery_latest_history, 'latest_history', function ($join) {
+                $join->on('currency.id', '=', 'latest_history.currency_id');
+            })
+            ->leftJoinSub($subquery_previous_history, 'previous_history', function ($join) {
+                $join->on('currency.id', '=', 'previous_history.currency_id');
+            })
+            ->get();
+
+        return response()->json($currencies, 200);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
+
+
     /**
      * Analyzes the currency trend for the selected currencies within the current day.
      *
@@ -44,8 +132,6 @@ class HistoryController extends Controller
         try {
             $selectedCurrencies = $this->currencyHistoryService->getUniqueCurrenciesId();
             $trend = $this->currencyHistoryService->analyzeCurrencyTrend($selectedCurrencies);
-            dd($trend);
-
             return response()->json($trend, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Internal server error'], 500);
@@ -62,8 +148,6 @@ class HistoryController extends Controller
         try {
             $selectedCurrencies = $this->currencyHistoryService->getUniqueCurrenciesId();
             $lastCurrencies = $this->currencyHistoryService->getLastCurrencies($selectedCurrencies);
-
-            dd($lastCurrencies);
 
             return response()->json($lastCurrencies, 200);
         } catch (\Exception $e) {
