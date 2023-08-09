@@ -12,7 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('currency:update-history')->everyFifteenMinutes();
+        $schedule->command('currency:update')->everyFifteenMinutes();
         $schedule->command('email:daily-crypto')->timezone('Europe/London')->dailyAt('13:00');
         $schedule->command('telegram:daily-crypto')->timezone('Europe/London')->dailyAt('13:00');
         $schedule->command('config:clear')->daily();
