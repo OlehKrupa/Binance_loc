@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Repositories\BaseRepository;
 use App\Models\CurrencyHistory;
+use App\Models\Currency;
 use Carbon\Carbon;
 
 class CurrencyHistoryRepository extends BaseRepository
@@ -83,27 +84,32 @@ class CurrencyHistoryRepository extends BaseRepository
         $trend = [];
 
         foreach ($selectedCurrencies as $currencyId) {
-            $firstSell = CurrencyHistory::select('currency_history.sell')
-                ->where('currency_id', $currencyId)
-                ->whereBetween('created_at', [$startDate, $endDate])
-                ->orderBy('created_at')
-                ->value('sell');
+            $currency = Currency::find($currencyId);
+            if ($currency) {
+                $firstSell = CurrencyHistory::select('currency_history.sell')
+                    ->where('currency_id', $currencyId)
+                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->orderBy('created_at')
+                    ->value('sell');
 
-            $lastSell = CurrencyHistory::select('currency_history.sell')
-                ->where('currency_id', $currencyId)
-                ->whereBetween('created_at', [$startDate, $endDate])
-                ->orderByDesc('created_at')
-                ->value('sell');
+                $lastSell = CurrencyHistory::select('currency_history.sell')
+                    ->where('currency_id', $currencyId)
+                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->orderByDesc('created_at')
+                    ->value('sell');
 
-            if ($firstSell !== null && $lastSell !== null) {
-                $change = ($lastSell - $firstSell) / $firstSell * 100;
+                if ($firstSell !== null && $lastSell !== null) {
+                    $change = ($lastSell - $firstSell) / $firstSell * 100;
 
-                $trend[$currencyId] = [
-                    'id' => $currencyId,
-                    'trend' => $change,
-                ];
+                    $trend[$currencyId] = [
+                        'id' => $currencyId,
+                        'name' => $currency->name,
+                        'trend' => $change,
+                    ];
+                }
             }
         }
         return $trend;
     }
+
 }

@@ -40,7 +40,7 @@ class Mailer implements ShouldQueue
         $email = new \SendGrid\Mail\Mail();
 
         // Set the email sender and subject
-        $email->setFrom("krupao.krnu@gmail.com", "Oleh");
+        $email->setFrom("krupao.krnu@gmail.com", "Your assistant");
         $email->setSubject("Daily crypto analysis");
 
         // Add the recipient email address
