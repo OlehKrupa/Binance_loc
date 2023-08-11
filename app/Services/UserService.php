@@ -29,6 +29,17 @@ class UserService extends BaseService
      * @param \App\Models\User $user
      * @return \Illuminate\Support\Collection
      */
+    public function getUserCurrenciesIds(User $user)
+    {
+        return $this->repo->getUserCurrenciesIds($user);
+    }
+
+    /**
+     * Get the currencies associated with the user.
+     *
+     * @param \App\Models\User $user
+     * @return \Illuminate\Support\Collection
+     */
     public function getUserCurrencies(User $user)
     {
         return $this->repo->getUserCurrencies($user);

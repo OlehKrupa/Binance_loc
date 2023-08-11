@@ -55,9 +55,20 @@ class UserRepository extends BaseRepository
      * @param \App\Models\User $user
      * @return \Illuminate\Support\Collection
      */
-    public function getUserCurrencies(User $user)
+    public function getUserCurrenciesIds(User $user)
     {
         return $user->currencies()->pluck('currency_id');
+    }
+
+    /**
+     * Get the currencies associated with the user.
+     *
+     * @param \App\Models\User $user
+     * @return \Illuminate\Support\Collection
+     */
+    public function getUserCurrencies(User $user)
+    {
+        return $user->currencies()->get();
     }
 
     /**
