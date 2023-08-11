@@ -23,16 +23,18 @@ Route::post('/register', [AuthController::class, 'register'])->name('auth.regist
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
-
     Route::get('/user', function (Request $request) {
 
         return $request->user();
     });
 
+    Route::get('/user/preferencesData', [UserController::class, 'getPreferencesData'])->name('auth.getPreferencesData');
     Route::get('/user/preferences', [UserController::class, 'getPreferences'])->name('auth.getPreferences');
     Route::put('/user/preferences', [UserController::class, 'setPreferences'])->name('auth.setPreferences');
 
     Route::get('/user/history', [UserController::class, 'getUserCurrencyHistory'])->name('auth.getUserCurrencyHistory');
+    Route::patch('/user/subscribe', [UserController::class,'toggleSubscriptionStatus'])->name('auth.subscribe');
+
 
     Route::apiResource('/currency', CurrencyController::class);
     Route::apiResource('/history', HistoryController::class);
