@@ -4,59 +4,67 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use voku\helper\HtmlDomParser;
+use Illuminate\Support\Facades\Http;
 
 class ParseNews extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'app:parse-news';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Parse news from a website';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
-        $url = "https://cryptorank.io/news";
+        $url = "https://decrypt.co/news";
 
-        $response = file_get_contents($url);
+        $response = Http::get($url);
 
-        if ($response !== false) {
-            $dom = HtmlDomParser::str_get_html($response);
-            
-            $news_element = $dom->findOne('#84457054');
+        if ($response->ok()) {
+            $content = $response->body();
+            $dom = HtmlDomParser::str_get_html($content);
 
-            $this->info($news_element);
+            $news_elements = $dom->find('article');
+            $this->info($news_elements);
+            dd(1);
+            $parsedNews = [];
 
-            if ($news_element) {
-                $time = $news_element->findOne('.sc-ac6d7642-1 gTjTyc')->text();
+            foreach ($news_elements as $news_element) {
+                $category_element = $news_element->findOneOrFalse('p.text-cc-pink-2');
+                $category = $category_element ? trim($category_element->text()) : '';
 
-                $link = $news_element->findOne('a')->getAttribute('href');
+                $title_element = $news_element->findOneOrFalse('h3 a');
+                $title = $title_element ? trim($title_element->text()) : '';
 
-                $title = $news_element->findOne('.sc-ac6d7642-2')->text();
+                $description_element = $news_element->findOneOrFalse('p.mt-1');
+                $description = $description_element ? trim($description_element->text()) : '';
 
-                $description = $news_element->findOne('.sc-ac6d7642-8')->text();
+                $image_element = $news_element->findOneOrFalse('img');
+                $imageSrc = $image_element ? $image_element->getAttribute('src') : '';
+                $this->info($imageSrc);
 
-                $this->info("Time: " . $time);
-                $this->info("Url: " . $link);
-                $this->info("Title: " . $title);
-                $this->info("Content: " . $description);
+                $source_element = $news_element->findOneOrFalse('h3 a');
+                $sourceUrl = $source_element ? $source_element->getAttribute('href') : '';
+
+                if ($category && $title && $description && $imageSrc && $sourceUrl) {
+                    $parsedNews[] = [
+                        'category' => $category,
+                        'title' => $title,
+                        'description' => $description,
+                        'image' => $imageSrc,
+                        'sourceUrl' => $sourceUrl,
+                    ];
+                }
+            }
+
+            foreach ($parsedNews as $news) {
+                $this->info("Category: " . $news['category']);
+                $this->info("Title: " . $news['title']);
+                $this->info("Description: " . $news['description']);
+                $this->info("Image: " . $news['image']);
+                $this->info("Source URL: " . $news['sourceUrl']);
 
                 $this->line(str_repeat("=", 50));
-            } else {
-                $this->error("404");
             }
         } else {
-            $this->error("error");
+            $this->error("Error: Unable to retrieve content from the URL");
         }
     }
 }
