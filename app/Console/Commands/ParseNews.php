@@ -1,70 +1,89 @@
 <?php
-
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use voku\helper\HtmlDomParser;
 use Illuminate\Support\Facades\Http;
+use App\Services\NewsService;
 
 class ParseNews extends Command
 {
-    protected $signature = 'app:parse-news';
+    protected $signature = 'news:parse';
     protected $description = 'Parse news from a website';
+
+    private $newsService;
+
+    public function __construct(NewsService $newsService)
+    {
+        parent::__construct();
+        $this->newsService = $newsService;
+    }
 
     public function handle()
     {
-        $url = "https://decrypt.co/news";
+        $url = "https://decrypt.co";
 
-        $response = Http::get($url);
+        $response = Http::get($url . "/news");
 
-        if ($response->ok()) {
-            $content = $response->body();
-            $dom = HtmlDomParser::str_get_html($content);
+        if (!$response->ok()) {
+            $this->error("Error: Unable to retrieve content from the URL");
+            return;
+        }
 
-            $news_elements = $dom->find('article');
-            $this->info($news_elements);
-            dd(1);
-            $parsedNews = [];
+        $content = $response->body();
+        $dom = HtmlDomParser::str_get_html($content);
 
-            foreach ($news_elements as $news_element) {
-                $category_element = $news_element->findOneOrFalse('p.text-cc-pink-2');
-                $category = $category_element ? trim($category_element->text()) : '';
+        $news_elements = $dom->find('article');
+        $processedUrls = [];
 
-                $title_element = $news_element->findOneOrFalse('h3 a');
-                $title = $title_element ? trim($title_element->text()) : '';
+        $allowedCategories = ['Business', 'Coins', 'NFTs', 'Artificial Intelligence'];
 
-                $description_element = $news_element->findOneOrFalse('p.mt-1');
-                $description = $description_element ? trim($description_element->text()) : '';
+        foreach ($news_elements as $news_element) {
+            $category_element = $news_element->findOneOrFalse('p.text-cc-pink-2');
+            $category = $category_element ? trim($category_element->text()) : '';
 
-                $image_element = $news_element->findOneOrFalse('img');
-                $imageSrc = $image_element ? $image_element->getAttribute('src') : '';
-                $this->info($imageSrc);
+            if (!in_array($category, $allowedCategories)) {
+                continue;
+            }
 
-                $source_element = $news_element->findOneOrFalse('h3 a');
-                $sourceUrl = $source_element ? $source_element->getAttribute('href') : '';
+            $title_element = $news_element->findOneOrFalse('h3 a');
+            $title = $title_element ? trim($title_element->text()) : '';
 
-                if ($category && $title && $description && $imageSrc && $sourceUrl) {
-                    $parsedNews[] = [
-                        'category' => $category,
+            $content_element = $news_element->findOneOrFalse('p.mt-1');
+            $content = $content_element ? trim($content_element->text()) : '';
+
+            $image_elements = $news_element->find('img');
+            $imageSrc = '';
+
+            if (!empty($image_elements) && count($image_elements) >= 2) {
+                $second_image_element = $image_elements[1];
+                $imageSrc = $second_image_element->getAttribute('src');
+            }
+
+            $source_element = $news_element->findOneOrFalse('h3 a');
+            $sourceUrl = $source_element ? $source_element->getAttribute('href') : '';
+
+            if (in_array($sourceUrl, $processedUrls)) {
+                continue;
+            }
+
+            $processedUrls[] = $sourceUrl;
+
+            if ($category && $title && $content && $imageSrc && $sourceUrl) {
+                $existingNews = $this->newsService->findBySourceUrl($url . $sourceUrl);
+                if (!$existingNews) {
+                    $this->newsService->create([
                         'title' => $title,
-                        'description' => $description,
+                        'content' => $content,
                         'image' => $imageSrc,
-                        'sourceUrl' => $sourceUrl,
-                    ];
+                        'source' => $url . $sourceUrl,
+                        'category' => $category,
+                        'published_at' => now(),
+                    ]);
                 }
             }
-
-            foreach ($parsedNews as $news) {
-                $this->info("Category: " . $news['category']);
-                $this->info("Title: " . $news['title']);
-                $this->info("Description: " . $news['description']);
-                $this->info("Image: " . $news['image']);
-                $this->info("Source URL: " . $news['sourceUrl']);
-
-                $this->line(str_repeat("=", 50));
-            }
-        } else {
-            $this->error("Error: Unable to retrieve content from the URL");
         }
+
+        $this->info("News parsing and saving to the database complete.");
     }
 }
