@@ -18,7 +18,7 @@ class NewsController extends Controller
     public function getNews(Request $request)
     {
         try {
-            return response()->json($this->newsService->all());
+            return response()->json($this->newsService->all()->take(12));
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
