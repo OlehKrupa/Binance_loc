@@ -15,6 +15,7 @@ class ParseNews extends Command
 
     public function __construct(NewsService $newsService)
     {
+        parent::__construct();
         $this->newsService = $newsService;
     }
 
