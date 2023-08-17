@@ -8,14 +8,13 @@ use App\Services\NewsService;
 
 class ParseNews extends Command
 {
-    protected $signature = 'news:parse';
+    protected $signature = 'parse:news';
     protected $description = 'Parse news from a website';
 
     private $newsService;
 
     public function __construct(NewsService $newsService)
     {
-        parent::__construct();
         $this->newsService = $newsService;
     }
 
