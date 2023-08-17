@@ -10,4 +10,9 @@ class NewsRepository extends BaseRepository
     {
         $this->model = $model;
     }
+
+    public function findBySourceUrl($sourceUrl)
+    {
+        return News::where('source', $sourceUrl)->first();
+    }
 }

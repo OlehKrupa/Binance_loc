@@ -20,6 +20,7 @@ class News extends Model
         'image',
         'source',
         'published_at',
+        'category',
     ];
 
     /**

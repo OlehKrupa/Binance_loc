@@ -11,4 +11,9 @@ class NewsService extends BaseService
     {
         $this->repo = $repo;
     }
+
+    public function findBySourceUrl($sourceUrl)
+    {
+        return $this->repo->findBySourceUrl($sourceUrl);
+    }
 }
