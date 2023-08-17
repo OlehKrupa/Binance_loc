@@ -15,8 +15,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('currency:update')->everyFifteenMinutes();
         $schedule->command('email:daily-crypto')->timezone('Europe/London')->dailyAt('13:00');
         $schedule->command('telegram:daily-crypto')->timezone('Europe/London')->dailyAt('13:00');
-        $schedule->command('config:clear')->daily();
-        $schedule->command('config:cache')->daily();
+        $schedule->command('parse:news')->hourly();
+        $schedule->command('optimize:clear')->daily();
     }
 
     /**
