@@ -139,6 +139,27 @@ class UserController extends Controller
         }
     }
 
+    public function unTogglePremiumStatus(Request $request)
+    {
+        try {
+            $user = $request->user();
+            $premiumAt = $user->premium_at;
+
+            // Toggle between null and current time
+            if ($premiumAt != null) {
+                $user->premium_at = null;
+            } 
+
+            $user->save();
+
+            // Return a success message as a JSON response after toggling the subscription status
+            return response()->json(['message' => 'Premium status untoggled successfully'], 200);
+        } catch (\Exception $e) {
+            // Handle any exceptions that occur during the process and return an error response
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     /**
      * API function to get user currency history.
      *
