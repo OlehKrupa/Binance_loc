@@ -33,7 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
-    Route::get('/getSession', [StripeController::class, 'getSession']);
+    Route::get('/user/getSession', [StripeController::class, 'getSession']);
 
     Route::get('/user/preferencesData', [UserController::class, 'getPreferencesData'])->name('auth.getPreferencesData');
     Route::get('/user/preferences', [UserController::class, 'getPreferences'])->name('auth.getPreferences');
