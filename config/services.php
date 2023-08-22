@@ -41,12 +41,11 @@ return [
     */
 
     'cryptocurrencies' => [
-        'AAVE', 'ADA', 'ALGO', 'ATOM', 'AVAX',
-        'BCH', 'BSV', 'BTC', 'COMP', 'CRO',
-        'DAI', 'DOGE', 'DOT', 'EGLD', 'EOS',
+        'AAVE', 'ATOM', 'AVAX',
+        'BCH', 'BSV', 'BTC',
+        'DAI', 'DOT', 'EGLD',
         'ETC', 'ETH', 'FIL', 'LINK', 'LTC',
-        'MATIC', 'MKR', 'WBTC',
-        'XLM',
+        'MKR', 'WBTC',
     ],
 
     /*
