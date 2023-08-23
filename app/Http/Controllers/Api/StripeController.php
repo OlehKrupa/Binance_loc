@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User; // Импортируем модель User
+use App\Models\User;
 
 class StripeController extends Controller
 {
@@ -12,26 +12,26 @@ class StripeController extends Controller
     {
         $stripe = new \Stripe\StripeClient('sk_test_51Ng6pYDtedehY5ENIwiy6IZryUlzSwu4UMuQBXXNp1LVK6qJolEXUT16xQFaogy1wQpwpaKAcGTO0w06BLK2L9g100DGsTAl71');
 
-        $user = auth()->user(); // Получаем текущего пользователя
+        $user = auth()->user();
 
-        $checkout = $stripe->checkout->sessions->create([
-            'success_url' => 'http://localhost:8080/preferences',
-            'cancel_url' => 'http://localhost:8080/dashboard',
-            'line_items' => [
-                [
-                    'price_data' => [
-                        'currency' => 'usd',
-                        'unit_amount' => 500,
-                        'product_data' => [
-                            'name' => "Stripe controller Test",
-                        ],
-                    ],
-                    'quantity' => 1,
-                ],
-            ],
-            'customer_email' => $user->email, // Передаем email пользователя
-            'mode' => 'payment',
-        ]);
+        // $checkout = $stripe->checkout->sessions->create([
+        //     'success_url' => 'http://localhost:8080/preferences',
+        //     'cancel_url' => 'http://localhost:8080/dashboard',
+        //     'line_items' => [
+        //         [
+        //             'price_data' => [
+        //                 'currency' => 'usd',
+        //                 'unit_amount' => 500,
+        //                 'product_data' => [
+        //                     'name' => "Stripe controller Test",
+        //                 ],
+        //             ],
+        //             'quantity' => 1,
+        //         ],
+        //     ],
+        //     'customer_email' => $user->email,
+        //     'mode' => 'payment',
+        // ]);
 
         $sub = $stripe->checkout->sessions->create([
             'success_url' => 'http://localhost:8080/preferences',
@@ -42,7 +42,7 @@ class StripeController extends Controller
                     'quantity' => 1,
                 ],
             ],
-            'customer_email' => $user->email, // Передаем email пользователя
+            'customer_email' => $user->email, 
             'mode' => 'subscription',
         ]);
 
@@ -51,6 +51,45 @@ class StripeController extends Controller
             'sub' => $sub
         ];
     }
+
+    public function cancelSubscribe(Request $request)
+{
+    $stripe = new \Stripe\StripeClient('sk_test_51Ng6pYDtedehY5ENIwiy6IZryUlzSwu4UMuQBXXNp1LVK6qJolEXUT16xQFaogy1wQpwpaKAcGTO0w06BLK2L9g100DGsTAl71');
+
+    $user = auth()->user();
+
+    $stripeCustomer = $stripe->customers->all([
+        'email' => $user->email,
+        'limit' => 1,
+    ]);
+
+    if (!empty($stripeCustomer->data)) {
+        $customerId = $stripeCustomer->data[0]->id;
+
+        $subscriptions = $stripe->subscriptions->all([
+            'customer' => $customerId,
+            'price' => 'price_1NhTtUDtedehY5EN7rLqIEr4',
+        ]);
+
+        if (!empty($subscriptions->data)) {
+            $subscriptionId = $subscriptions->data[0]->id;
+            $canceledSubscription = $stripe->subscriptions->update($subscriptionId, [
+                'cancel_at_period_end' => true,
+            ]);
+
+            // if ($canceledSubscription) {
+            //     $user->premium_at = null;
+            //     $user->save();
+            //     \Illuminate\Support\Facades\Log::info("Canceled premium subscription for user {$user->id}.");
+            // }
+
+            return response()->json(["status" => 'success']);
+        }
+    }
+
+    return response()->json(["status" => 'error', "message" => 'No active subscriptions found.']);
+}
+
 
     public function webhook(Request $request)
     {
