@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CurrencyController;
 use App\Http\Controllers\Api\HistoryController;
 use App\Http\Controllers\Api\NewsController;
+use App\Http\Controllers\Api\StripeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +22,9 @@ use App\Http\Controllers\Api\NewsController;
 
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
 Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
-Route::get('/news', [NewsController::class,'getNews'])->name('news');
+Route::get('/news', [NewsController::class, 'getNews'])->name('news');
+
+Route::post('/webhook', [StripeController::class, 'webhook']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
@@ -30,12 +33,16 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
+    Route::get('/user/getSession', [StripeController::class, 'getSession']);
+
     Route::get('/user/preferencesData', [UserController::class, 'getPreferencesData'])->name('auth.getPreferencesData');
     Route::get('/user/preferences', [UserController::class, 'getPreferences'])->name('auth.getPreferences');
     Route::put('/user/preferences', [UserController::class, 'setPreferences'])->name('auth.setPreferences');
 
     Route::get('/user/history', [UserController::class, 'getUserCurrencyHistory'])->name('auth.getUserCurrencyHistory');
-    Route::patch('/user/subscribe', [UserController::class,'toggleSubscriptionStatus'])->name('auth.subscribe');
+    Route::patch('/user/subscribe', [UserController::class, 'toggleSubscriptionStatus'])->name('auth.subscribe');
+
+    Route::get('/user/unstripe', [StripeController::class, 'cancelSubscribe'])->name('auth.cancelSubscribe');
 
     Route::apiResource('/currency', CurrencyController::class);
     Route::apiResource('/history', HistoryController::class);
