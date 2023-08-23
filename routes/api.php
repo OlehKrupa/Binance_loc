@@ -34,7 +34,6 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::get('/user/getSession', [StripeController::class, 'getSession']);
-    Route::get('/user/unstripe', [StripeController::class, 'cancelSubscribe'])->name('auth.cancelSubscribe');
 
     Route::get('/user/preferencesData', [UserController::class, 'getPreferencesData'])->name('auth.getPreferencesData');
     Route::get('/user/preferences', [UserController::class, 'getPreferences'])->name('auth.getPreferences');
@@ -42,7 +41,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/user/history', [UserController::class, 'getUserCurrencyHistory'])->name('auth.getUserCurrencyHistory');
     Route::patch('/user/subscribe', [UserController::class, 'toggleSubscriptionStatus'])->name('auth.subscribe');
-    Route::patch('/user/unpremium', [UserController::class, 'unTogglePremiumStatus'])->name('auth.unpremium');
+
+    Route::get('/user/unstripe', [StripeController::class, 'cancelSubscribe'])->name('auth.cancelSubscribe');
 
     Route::apiResource('/currency', CurrencyController::class);
     Route::apiResource('/history', HistoryController::class);
