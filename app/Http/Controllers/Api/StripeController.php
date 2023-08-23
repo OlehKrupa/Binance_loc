@@ -46,7 +46,10 @@ class StripeController extends Controller
             'mode' => 'subscription',
         ]);
 
-        return ['oneTime' => $checkout, 'sub' => $sub];
+        return [
+            // 'oneTime' => $checkout, 
+            'sub' => $sub
+        ];
     }
 
     public function webhook(Request $request)
