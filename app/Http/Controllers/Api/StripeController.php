@@ -10,7 +10,7 @@ class StripeController extends Controller
 {
     public function getSession()
     {
-        $stripe = new \Stripe\StripeClient('sk_test_51Ng6pYDtedehY5ENIwiy6IZryUlzSwu4UMuQBXXNp1LVK6qJolEXUT16xQFaogy1wQpwpaKAcGTO0w06BLK2L9g100DGsTAl71');
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
 
         $user = auth()->user();
 
@@ -34,7 +34,7 @@ class StripeController extends Controller
 
     public function cancelSubscribe()
     {
-        $stripe = new \Stripe\StripeClient('sk_test_51Ng6pYDtedehY5ENIwiy6IZryUlzSwu4UMuQBXXNp1LVK6qJolEXUT16xQFaogy1wQpwpaKAcGTO0w06BLK2L9g100DGsTAl71');
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
 
         $user = auth()->user();
 
